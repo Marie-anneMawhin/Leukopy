@@ -1,12 +1,13 @@
 # Leukopy
----
+
+Classification of white blood cells.
 
 ## Context
----
+
 
 ## Data
 
----
+
 
 - Normal peripheral blood cells:
 A publicly available dataset of more than 17000 images of blood leukocytes from healthy donors stained with MGG. [^1]
@@ -16,7 +17,7 @@ A publicly available dataset of more than 17000 images of blood leukocytes from 
 
 
 ## Repository structure
----
+
 
 ```notebooks``` : jupyter notebooks
 ```data```
