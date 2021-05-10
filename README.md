@@ -30,3 +30,15 @@ A publicly available dataset of more than 17000 images of blood leukocytes from 
 ```notebooks``` : jupyter notebooks  
 
 ```data```
+
+
+## Contributors
+
+Laleh Ravanbod
+
+Marie-Anne Mawhin
+
+Mathieu Sarrat
+
+Yahia Bouzoubaa
+ 
