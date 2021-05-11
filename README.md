@@ -3,8 +3,8 @@
 Classification of white blood cells.
 
 ## Context
-The identification and classification of leukocytes, platelets and erythrocytes is crucial in several diagnosis of hematological diseases, such as infectious diseases or regenerative anaemia.
-A broader approach will aimed at classify other abnormal cells related to acute leukemia.
+The identification and classification of leukocytes, platelets and erythrocytes is crucial in the diagnosis of several hematological diseases, such as infectious diseases or regenerative anaemia.
+A broader approach will aim at classifying other abnormal cells related to acute leukemia.
 
 ## Data
 
