@@ -1,4 +1,4 @@
-# Leukopy
+# Leukopy 💉
 
 Classification of white blood cells.
 
