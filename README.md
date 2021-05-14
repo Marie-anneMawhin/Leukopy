@@ -47,3 +47,23 @@ Mathieu Sarrat
 
 Yahia Bouzoubaa
  
+## How to update new packages
+
+### > I want to install new package
+
+```
+cd PROJECT_ROOT_DIRECTORY
+pip install PACKAGE_NAME
+pip-chill > requirements.txt
+git add requirements.txt
+git commit -m "COMMENT"
+git pull
+git push
+```
+### > I want to update packages according to other's changes
+```
+cd PROJECT_ROOT_DIRECTORY
+git pull
+pip install -r requirements.txt
+```
+**Note** The commands in capital letters are placeholders.
