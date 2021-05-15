@@ -1,8 +1,11 @@
+cvxopt==1.2.6
+cvxpy==1.1.12
 jupyter==1.0.0
 jupyterlab==3.0.15
-opencv-python==4.5.2.52
+numexpr==2.7.3
 pip-chill==1.0.1
 plotly==4.14.3
-scikit-survival==0.14.0
+scikit-image==0.18.1
+scikit-learn==0.23.2
 seaborn==0.11.1
 streamlit==0.69.2
