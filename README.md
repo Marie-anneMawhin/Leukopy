@@ -11,21 +11,30 @@ A broader approach will aim at classifying other abnormal cells related to acute
 ### Normal peripheral blood cells:
 A publicly available [dataset](https://data.mendeley.com/datasets/snkd93bnjr/draft?a=d9582c71-9af0-4e59-9062-df30df05a121) of more than 17000 images of blood leukocytes from blood smears of healthy donors stained with MGG.<sup>[1](#footnote1)</sup>
 
-8 types of white blood cells:
-- neutrophils
-- eosinophils
-- basophils
-- lymphocytes
-- monocytes
-- immature granulocytes (metemyelocytes, myelocytes, promyelocytes)
-- platelets
-- erythroblasts
+Image size: 360 x 363 px, naming: <label>_<anonymised id>.jpg
 
-<a name="footnote1">1.</a> A dataset of microscopic peripheral blood cell images for development of automatic recognition systems. [Data Brief. 2020 Jun; 30: 105474.](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC7182702/)
+8 types of white blood cells:
+- neutrophils (segmented) - SNE
+- eosinophils - EO
+- basophils - BA
+- lymphocytes -LY
+- monocytes -MO
+- immature granulocytes (metemyelocytes, myelocytes, promyelocytes) and band - IG
+- platelets - PLATELET
+- erythroblasts - ERB
+
 
 ### APL, AML
 
-[dataset](https://www.kaggle.com/eugeneshenderov/acute-promyelocytic-leukemia-apl)
+A publicly available dataset [dataset](https://www.kaggle.com/eugeneshenderov/acute-promyelocytic-leukemia-apl). The data corresponds to 106 patients with identified Acute Promyelocytic Leukemia (APL) or Acute Myelocytic Leukemia (AML).<sup>[2](#footnote1)</sup>
+
+
+
+<a name="footnote1">1.</a> A dataset of microscopic peripheral blood cell images for development of automatic recognition systems. [Data Brief. 2020 Jun; 30: 105474.](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC7182702/)
+
+
+<a name="footnote1">2.</a> Deep Learning for Distinguishing Morphological Features of Acute Promyelocytic Leukemia. [Blood, 136, Supplement 1, 11 2020](https://doi.org/10.1182/blood-2020-135836)
+
 
 ## Repository structure
 
