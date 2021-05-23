@@ -25,11 +25,13 @@ def load_image(filename,  as_grey=False, rescale=None, float32=True):
     
     if as_grey:
         image = skimage.io.imread(filename, as_gray=True)
+        image = transform.resize(image, (363, 360)) #resize outliers
+        
     else:
         image = skimage.io.imread(filename)
+        image = transform.resize(image, (363, 360, 3)) #resize outliers
         
-    image = transform.resize(image, (363, 360)) #resize outliers
-    
+        
     if rescale: image = transform.rescale(image, rescale, anti_aliasing=True) #reduce dim
 
     if float32: image = img_as_float32(image)  # Optional: set to your desired precision
