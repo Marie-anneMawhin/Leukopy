@@ -1,3 +1,5 @@
 *.jpg
 *.ipynb_checkpoints
 *.db
+*.pyc
+*deconv.csv
