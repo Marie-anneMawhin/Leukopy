@@ -43,9 +43,6 @@ A publicly available dataset [dataset](https://www.kaggle.com/eugeneshenderov/ac
 
 ```data```
 
-## Drive
-[drive](https://drive.google.com/drive/folders/14rP7TLwCbGqefV5b8lAWYhFASDMVm_bo)
-
 ## Contributors
 
 Laleh Ravanbod
