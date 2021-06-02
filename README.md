@@ -41,7 +41,7 @@ A publicly available dataset [dataset](https://www.kaggle.com/eugeneshenderov/ac
 
 ```notebooks``` : jupyter notebooks  
 
-```data```
+```data```: csv and pkl indicating path, label, size of images
 
 ## Contributors
 
