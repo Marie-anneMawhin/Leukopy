@@ -1,11 +1,16 @@
 cvxopt==1.2.6
 cvxpy==1.1.12
+datashader==0.12.1
+distributed==2021.5.0
+hvplot==0.7.1
 jupyter==1.0.0
 jupyterlab==3.0.15
 numexpr==2.7.3
+opencv-python==4.5.2.52
 pip-chill==1.0.1
 plotly==4.14.3
 scikit-image==0.18.1
-scikit-learn==0.23.2
 seaborn==0.11.1
 streamlit==0.69.2
+tensorflow==2.5.0
+umap-learn==0.5.1
