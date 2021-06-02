@@ -37,3 +37,13 @@ def load_image(filename,  as_grey=False, rescale=None, float32=True):
     if float32: image = img_as_float32(image)  # Optional: set to your desired precision
     
     return image
+
+
+def load_df(path_name):
+    '''
+    Args:
+    -path_name: path to file as str
+    '''
+    path = Path(path_name)
+    df = pd.read_csv(path_name)
+    return df
