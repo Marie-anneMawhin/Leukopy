@@ -14,12 +14,12 @@ A publicly available [dataset](https://data.mendeley.com/datasets/snkd93bnjr/dra
 Image size: 360 x 363 px, naming: <label>_<anonymised id>.jpg
 
 8 types of white blood cells:
-- neutrophils (segmented) - SNE
+- neutrophils (segmented) and band - SNE
 - eosinophils - EO
 - basophils - BA
 - lymphocytes -LY
 - monocytes -MO
-- immature granulocytes (metemyelocytes, myelocytes, promyelocytes) and band - IG
+- immature granulocytes (metemyelocytes, myelocytes, promyelocytes) - IG
 - platelets - PLATELET
 - erythroblasts - ERB
 
