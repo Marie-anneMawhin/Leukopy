@@ -36,13 +36,13 @@ Our datasets of healthy cells also includes immature cells that have emerge earl
 The following diagram shows how these cells looks like following the classical staining (May Grunwald Giemsa or MGG) used in clinics.
 <!-- #endregion -->
 
-![image.png](attachment:9ffe23f0-d031-488f-8e5c-ba05e4a02c1a.png)
+![image.png](https://upload.wikimedia.org/wikipedia/commons/6/69/Hematopoiesis_%28human%29_diagram.png)
 
 
 ## 3. Identification and function of leukocytes
 
 
-![image.png](attachment:6bef19c3-0155-4837-a021-de718c6efaff.png)
+![leuko](images/1914_Table_19_3_1.jpg)
 
 
 # B/Data
