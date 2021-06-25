@@ -50,10 +50,13 @@ def load_df(path_name):
     df = pd.read_csv(path_name)
     return df
 
-def load_df_for_tf(path_name):
+def load_df_tf_dir(path_name, selection_list=None):
     '''
+    Load dataset from directory and perform train, test, split.
+    
     Args:
     -path_name: path to file as str
+    -selection_list: list of selected labels
     
     return tuple of df (train, valid, test)
     '''
@@ -61,6 +64,8 @@ def load_df_for_tf(path_name):
     df = pd.DataFrame()
     df['img_paths'] = [str(image) for image in path.glob('*/*')]
     df['label'] = [image.stem.split('_')[0] for image in path.glob('*/*')]
+    
+    if selection_list: df = df[df['label'].isin(selection_list)]
     
     df_temp, df_test = train_test_split(df, test_size=0.2, random_state=42)
     df_train, df_valid = train_test_split(df_temp, test_size=0.12, random_state=42)
