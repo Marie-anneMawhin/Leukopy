@@ -67,6 +67,6 @@ def load_df_tf_dir(path_name, selection_list=None):
     
     if selection_list: df = df[df['label'].isin(selection_list)]
     
-    df_temp, df_test = train_test_split(df, test_size=0.2, random_state=42)
+    df_temp, df_test = train_test_split(df, test_size=0.15, random_state=42)
     df_train, df_valid = train_test_split(df_temp, test_size=0.12, random_state=42)
     return df_train, df_valid, df_test
