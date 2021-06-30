@@ -77,7 +77,7 @@ def generate_dataframes(data_dir = None,
   
     
     data = pd.DataFrame()
-    data['img_paths'] = [image_path for ext in ['jpg', 'tif', 'png'] for image_path in path.glob(f'**/*.{ext}')]
+    data['img_path'] = [image_path for ext in ['jpg', 'tif', 'png'] for image_path in path.glob(f'**/*.{ext}')]
     data['cell_type'] = [image_path.parts[-2] for ext in ['jpg', 'tif', 'png'] for image_path in path.glob(f'**/*.{ext}')]
 
     data['label'] = [image_path.stem.split('_')[0] for ext in ['jpg', 'tif', 'png'] for image_path in path.glob(f'**/*.{ext}')]
