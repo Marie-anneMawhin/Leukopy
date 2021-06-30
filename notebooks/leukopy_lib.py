@@ -50,23 +50,52 @@ def load_df(path_name):
     df = pd.read_csv(path_name)
     return df
 
-def load_df_tf_dir(path_name, selection_list=None):
-    '''
-    Load dataset from directory and perform train, test, split.
+def generate_dataframes(data_dir = None,
+                        random_state = 42, 
+                        random_lock = True):
     
-    Args:
-    -path_name: path to file as str
-    -selection_list: list of selected labels
+    """ Generate 3 .csv dataframes (train, validation, test) from folder Leukopy/data (GitHub). 
+    Image folders are grouped by cell types and images either label by :
+    12 classes (label):  BA, BL, BNE, ERB, EO, LY, MMY, MO, MY, PLT, PMY, SNE
+    9 classes (label2):  BA, BL, IG, ERB, EO, LY, MO, PLT, NEU
+    10 classes (label3):  BA, BL, BNE, ERB, EO, LY, IG, MO, PLT, SNE
+        
+    data_dir : Path Object or str, path to images
+    random_state : int, default 42 for reproducibility
+    random_lock : bool., lock the value of random_state
+    """
+    # To work with the same split. 
+    if random_lock == True:
+        if random_state != 42:
+            random_state = 42
+            
+    # Verification : path to data files
+    if data_dir == None:
+        return "Please provide the path of the directory 'Leukopy' "
     
-    return tuple of df (train, valid, test)
-    '''
-    path = Path(path_name)
-    df = pd.DataFrame()
-    df['img_paths'] = [str(image) for image in path.glob('*/*')]
-    df['label'] = [image.stem.split('_')[0] for image in path.glob('*/*')]
+    path = Path(data_dir)
+  
     
-    if selection_list: df = df[df['label'].isin(selection_list)]
+    data = pd.DataFrame()
+    data['img_paths'] = [image_path for ext in ['jpg', 'tif', 'png'] for image_path in path.glob(f'**/*.{ext}')]
+    data['cell_type'] = [image_path.parts[-2] for ext in ['jpg', 'tif', 'png'] for image_path in path.glob(f'**/*.{ext}')]
+
+    data['label'] = [image_path.stem.split('_')[0] for ext in ['jpg', 'tif', 'png'] for image_path in path.glob(f'**/*.{ext}')]
+    data['label'] = data['label'].replace(to_replace = ["NEUTROPHIL", "PLATELET"], 
+                                  value = ["NEU", "PLT"])
     
-    df_temp, df_test = train_test_split(df, test_size=0.15, random_state=42)
-    df_train, df_valid = train_test_split(df_temp, test_size=0.12, random_state=42)
-    return df_train, df_valid, df_test
+    data['label_2'] = data['label'].replace(to_replace = ["SNE","BNE","NEUTROPHIL", "MY","MMY","PMY", "PLATELET"], 
+                                  value = ["NEU","IG","NEU", "IG","IG","IG", "PLT"])
+    
+    data['label_3'] = data['label'].replace(to_replace = ["NEUTROPHIL", "MY","MMY","PMY", "PLATELET"], 
+                                  value = ["NEU", "IG","IG","IG", "PLT"])
+    # Conversion to DataFrames
+    df_train, df_test = train_test_split(data, test_size = 0.15, random_state = random_state)
+    df_train, df_valid = train_test_split(df_train, test_size = 0.12, random_state = random_state)
+    
+    # Save DFs : .CSV files
+    df_train.to_csv(path_or_buf = 'train_set.csv')
+    df_valid.to_csv(path_or_buf = 'valid_set.csv')
+    df_test.to_csv(path_or_buf = 'test_set.csv')
+    
+    return df_train, df_test, df_valid
