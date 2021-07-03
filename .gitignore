@@ -2,7 +2,10 @@
 *.ipynb_checkpoints
 *.db
 *.pyc
+*.tif
 *deconv.csv
 *data/PBS_dataset_ALL*
 *data/PBS_dataset_normal_DIB*
 *data/PBS_dataset_APL_AML*
+*.save
+
