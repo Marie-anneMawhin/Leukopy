@@ -13,4 +13,6 @@ scikit-image==0.18.1
 seaborn==0.11.1
 streamlit==0.69.2
 tensorflow==2.5.0
+tensorflow-addons==0.13.0
 umap-learn==0.5.1
+vit-keras==0.1.0
