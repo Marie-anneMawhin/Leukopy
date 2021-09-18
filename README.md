@@ -27,24 +27,38 @@ Image size: 360 x 363 px, naming: <label>_<anonymised id>.jpg
 - erythroblasts - ERB
 <br />
  
-#### *PBC_dataset_normal_DIB*
+#### *PBC_dataset_normal_CVB*
 A small [dataset](https://data.mendeley.com/datasets/w7cvnmn4c5/1) from [CellaVision Blog](http://blog.cellavision.com/) of 100 images of healthy donors blood smears <sup>[2](#footnote1)</sup>
 
 Image size: 300 x 300 px, naming: in class_label_CVB.csv, labels (1- 5) corresponds respectively to neutrophil, lymphocyte, monocyte, eosinophil and basophil.
  
 <br />
 
-### 2.APL, AML
+### 2.PBS_dataset_AML_Munich
 
-A publicly available dataset [dataset](https://www.kaggle.com/eugeneshenderov/acute-promyelocytic-leukemia-apl). The data corresponds to 106 patients with identified Acute Promyelocytic Leukemia (APL) or Acute Myelocytic Leukemia (AML).<sup>[3](#footnote1)</sup>
-
+A publicly available dataset [dataset](https://wiki.cancerimagingarchive.net/pages/viewpage.action?pageId=61080958). The data corresponds to 100 patients diagnosed with Acute Myeloid Leukemia at Munich University Hospital between 2014 and 2017, as well as 100 patients without signs of hematological malignancy.<sup>[3](#footnote1)</sup>
+- BAS Basophil
+- EBO Erythroblast
+- EOS Eosinophil
+- KSC Smudge cell
+- LYA Lymphocyte (atypical)
+- LYT Lymphocyte (typical)
+- MMZ Metamyelocyte
+- MOB Monoblast
+- MON Monocyte
+- MYB Myelocyte
+- MYO Myeloblast
+- NGB Neutrophil (band)
+- NGS Neutrophil (segmented)
+- PMB Promyelocyte (bilobled)
+- PMO Promyelocyte
 
 <a name="footnote1">1.</a> A dataset of microscopic peripheral blood cell images for development of automatic recognition systems. [Data Brief. 2020 Jun; 30: 105474.](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC7182702/)
 
 <a name="footnote1">2.</a> Fast and Robust Segmentation of White Blood Cell Images by Self-supervised Learning. [Micron
 Volume 107, April 2018, Pages 55-71](https://doi.org/10.1016/j.micron.2018.01.010)
 
-<a name="footnote1">3.</a> Deep Learning for Distinguishing Morphological Features of Acute Promyelocytic Leukemia. [Blood, 136, Supplement 1, 11 2020](https://doi.org/10.1182/blood-2020-135836)
+<a name="footnote1">3.</a> Human-level recognition of blast cells in acute myeloid leukaemia with convolutional neural networks. [Nature Machine Intelligence volume 1, pages 538–544 (2019)](https://www.nature.com/articles/s42256-019-0101-9)
 
 
 ## Repository structure
