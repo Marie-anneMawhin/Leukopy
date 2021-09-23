@@ -36,7 +36,7 @@ Image size: 300 x 300 px, naming: in class_label_CVB.csv, labels (1- 5) correspo
 
 ### 2.PBS_dataset_AML_Munich
 
-A publicly available dataset [dataset](https://wiki.cancerimagingarchive.net/pages/viewpage.action?pageId=61080958). The data corresponds to 100 patients diagnosed with Acute Myeloid Leukemia at Munich University Hospital between 2014 and 2017, as well as 100 patients without signs of hematological malignancy.<sup>[3](#footnote1)</sup>
+A publicly available [dataset](https://wiki.cancerimagingarchive.net/pages/viewpage.action?pageId=61080958). The data corresponds to 100 patients diagnosed with Acute Myeloid Leukemia at Munich University Hospital between 2014 and 2017, as well as 100 patients without signs of hematological malignancy.<sup>[3](#footnote1)</sup>
 - BAS Basophil
 - EBO Erythroblast
 - EOS Eosinophil
