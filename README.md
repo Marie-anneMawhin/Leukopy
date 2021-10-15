@@ -22,7 +22,7 @@ Image size: 360 x 363 px, naming: <label>_<anonymised id>.jpg
 - basophils - BA
 - lymphocytes - LY
 - monocytes - MO
-- immature granulocytes (metemyelocytes, myelocytes, promyelocytes) and band - IG or separated - MMY, MY, PMY, BNE
+- immature granulocytes (metamyelocytes, myelocytes, promyelocytes) and band - IG or separated - MMY, MY, PMY, BNE
 - platelets - PLATELET
 - erythroblasts - ERB
 <br />
