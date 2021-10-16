@@ -56,17 +56,17 @@ A publicly available [dataset](https://wiki.cancerimagingarchive.net/pages/viewp
 - BAS Basophil
 - EBO Erythroblast
 - EOS Eosinophil
-- KSC Smudge cell
-- LYA Lymphocyte (atypical)
+- KSC Smudge cell : NOT USED
+- LYA Lymphocyte (atypical) : NOT USED
 - LYT Lymphocyte (typical)
 - MMZ Metamyelocyte
-- MOB Monoblast
+- MOB Monoblast : NOT USED
 - MON Monocyte
 - MYB Myelocyte
-- MYO Myeloblast
+- MYO Myeloblast: NOT USED
 - NGB Neutrophil (band)
 - NGS Neutrophil (segmented)
-- PMB Promyelocyte (bilobled)
+- PMB Promyelocyte (bilobled) : NOT USED
 - PMO Promyelocyte
 
 <a name="footnote1">1.</a> A dataset of microscopic peripheral blood cell images for development of automatic recognition systems. [Data Brief. 2020 Jun; 30: 105474.](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC7182702/)
@@ -77,7 +77,25 @@ Volume 107, April 2018, Pages 55-71](https://doi.org/10.1016/j.micron.2018.01.01
  <a name="footnote3">3.</a> Raabin-WBC: a large free access dataset of white blood cells from normal peripheral blood. [bioRxiv, 5 (2021))](https://www.biorxiv.org/content/10.1101/2021.05.02.442287v4)
 
 <a name="footnote4">4.</a> Human-level recognition of blast cells in acute myeloid leukaemia with convolutional neural networks. [Nature Machine Intelligence volume 1, pages 538–544 (2019)](https://www.nature.com/articles/s42256-019-0101-9)
+ 
+ 
+ ### 3.Merged final dataset
+A merge dataset consisting of the 3 datasets described above and 11 classes:
 
+|Cell type|Code|Barcelona|Raabin|Munich|
+|---------|----|---------|------|------|
+|neutrophils (segmented)| SNE|X| |X|
+|eosinophils|              EO|X|X|X|
+|basophils|                BA|X|X|X|
+|lymphocytes|              LY|X|X|X|
+|monocytes|                MO|X|X|X|
+|metamyelocytes|          MMY|X| |X|
+|myelocytes|               MY|X| |X|
+|promyelocytes|           PMY|X| |X|
+|band neutrophils|        BNE|X| |X|
+|platelets|               PLT|X| | |
+|erythroblasts|           ERB|X| |X|
+ 
 
 ## Repository structure
 
