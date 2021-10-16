@@ -14,16 +14,24 @@ from dask import bag, diagnostics
 
 import leukopy_lib as leuko
 
+from bokeh.plotting import figure, show, output_notebook
+from bokeh.models import HoverTool, ColumnDataSource, LabelSet
+output_notebook()
 
-def plot_random_by_classes(df):
+def plot_random_by_classes(df, origin=False):
     label_list = list(df["label"].unique())
     
     fig = plt.figure(figsize = (20,10))
     for label, fi in zip (label_list, range(1,9)) :
-        img = leuko.load_image(np.random.choice(df[df["label"] == label]["img_path"]))
+        img_path = np.random.choice(df[df["label"] == label]["img_path"])
+        img = leuko.load_image(img_path)
         plt.subplot(2,4,fi)
         plt.imshow(img)
-        plt.title(label+' - Height = '+str(img.shape[0])+' ; Width = '+str(img.shape[1]))
+        
+        if origin:
+            plt.title(f'{label} - {df[df["img_path"] == img_path]["origin"].values[0]}')
+        else:
+            plt.title(label+' - Height = '+str(img.shape[0])+' ; Width = '+str(img.shape[1]))
     return
 
 ### Picture shape stats (all)
