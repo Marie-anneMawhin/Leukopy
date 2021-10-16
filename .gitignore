@@ -10,4 +10,7 @@
 *data/PBS_dataset_normal_DIB*
 *data/PBS_dataset_APL_AML*
 *.save
-
+*.swp
+*.virtual_documents*
+*model_save*
+*.txt
