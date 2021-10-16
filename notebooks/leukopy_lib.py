@@ -134,10 +134,10 @@ def generate_images_df(data_dir = None):
     path = Path(data_dir)
   
     data = pd.DataFrame()
-    data['img_path'] = [str(image_path) for ext in ['jpg', 'tif', 'png'] for image_path in path.glob(f'**/*.{ext}')]
-    data['cell_type'] = [image_path.parts[-2] for ext in ['jpg', 'tif', 'png'] for image_path in path.glob(f'**/*.{ext}')]
+    data['img_path'] = [str(image_path) for ext in ['jpg', 'tiff', 'png'] for image_path in path.glob(f'**/*.{ext}')]
+    data['cell_type'] = [image_path.parts[-2] for ext in ['jpg', 'tiff', 'png'] for image_path in path.glob(f'**/*.{ext}')]
 
-    data['label'] = [image_path.stem.split('_')[0] for ext in ['jpg', 'tif', 'png'] for image_path in path.glob(f'**/*.{ext}')]
+    data['label'] = [image_path.stem.split('_')[0] for ext in ['jpg', 'tiff', 'png'] for image_path in path.glob(f'**/*.{ext}')]
     data['label'] = data['label'].replace(to_replace = ["NEUTROPHIL", "PLATELET"], 
                                   value = ["SNE", "PLT"])
     #remove label IG if needed
@@ -287,3 +287,32 @@ def gradcam(model, img_path, class_index = None, alpha = 0.5, plot = True):
         plt.imshow(superimposed_img)
         plt.title("Chosen class : "+str(list(label_map.keys())[class_index]))
         return big_heatmap, superimposed_img
+    
+    
+    
+# # Specific to colab
+# # Gives access to the Drive
+# from google.colab import drive
+# import tensorflow as tf
+# import sys, os
+
+
+# drive.mount('/content/drive')
+
+# # GPU status verification
+# tf.test.gpu_device_name()
+
+# # GPU type verification
+# gpu_info = !nvidia-smi
+# gpu_info = '\n'.join(gpu_info)
+# if gpu_info.find('failed') >= 0:
+#     print('Select the Runtime > "Change runtime type" menu to enable a GPU accelerator, ')
+#     print('and then re-execute this cell.')
+# else:
+#     print(gpu_info)
+
+# # Need to copy all the files on the local computer
+# !cp -r "drive/MyDrive/data/main_dataset.zip" .
+# !unzip main_dataset.zip
+
+# sys.path.append('drive/MyDrive/colab_notebooks/')
