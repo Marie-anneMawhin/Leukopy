@@ -28,7 +28,7 @@ def main():
     selection = st.sidebar.radio("Go to", list(PAGES.keys()))
 
     page = PAGES[selection]
-
+    page.write()
     # with st.spinner(f"Loading {selection} ..."):
     #     ast.shared.components.write_page(page)
     st.sidebar.title("About")
