@@ -1,16 +1,23 @@
 import streamlit as st
-
-# page = st.sidebar.radio("Navigation", options = ["EDA", "Modélisation"])
-
-st.title("Leukopy - blood cell image classifier")
+from importlib import reload
 
 import pages.home
+reload(pages.home)
+
 import pages.EDA
+reload(pages.EDA)
+
 import pages.model
+reload(pages.model)
+
 import pages.perspective
+reload(pages.perspective)
+
 import pages.about
-# if page == "EDA":
-#     st.title("Démo Streamlit Mar21 DA DS")
+reload(pages.about)
+
+
+
 
 PAGES = {
     "Home": pages.home,
@@ -38,7 +45,6 @@ def main():
         [leukopy](https://github.com/DataScientest/Leukopy).
 """
     )
-
 
 if __name__ == "__main__":
     main()
