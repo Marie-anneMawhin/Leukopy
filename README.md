@@ -2,8 +2,11 @@
 
 Classification of white blood cells.
 
-* auto-gen TOC:
-{:toc}
+# Table of content
+ * [Repository structure](#repository-structure)
+ * [Context](#context)
+ * [Data](#data)
+ * [Contributors](#contributors)
 
 ## Repository structure
 
