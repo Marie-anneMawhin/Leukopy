@@ -2,6 +2,37 @@
 
 Classification of white blood cells.
 
+* auto-gen TOC:
+{:toc}
+
+## Repository structure
+
+```bash
+├── data
+├── demo
+├── notebooks
+│   ├── EDA
+│   ├── import
+│   └── model
+│       ├── efficientNet
+│       ├── lenet
+│       ├── vgg16
+│       ├── vgg19
+│       ├── ViT
+│       └── Xception
+└── streamlit
+```
+
+```data```: csv indicating `path`, `label`, `size` of images.
+
+```demo```: `.py` files for testing our code.
+
+```notebooks``` : jupyter notebooks containing import (to convert images to df), model (exploration of various models), EDA (data exploration).
+
+```streamlit```: streamlit app.
+
+
+
 ## Context
 The identification and classification of leukocytes, platelets and erythrocytes is crucial in the diagnosis of several hematological diseases, such as infectious diseases or regenerative anaemia.
 A broader approach will aim at classifying other abnormal cells related to acute leukemia.
@@ -97,12 +128,6 @@ A merge dataset consisting of the 3 datasets described above and 11 classes:
 |erythroblasts|           ERB|X| |X|
  
 
-## Repository structure
-
-
-```notebooks``` : jupyter notebooks  
-
-```data```: csv and pkl indicating path, label, size of images
 
 ## Contributors
  
