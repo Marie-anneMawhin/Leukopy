@@ -34,7 +34,24 @@ Classification of white blood cells.
 
 ```streamlit```: streamlit app.
 
+## Usage
 
+The datasets can be downloaded using the the links provided in their description: see [Data](#data).  
+The barcelone dataset *PBC_dataset_normal_Barcelona* can be used on its own.  
+The merge data should follow the following structure:
+```bash
+├── BA
+├── BNE
+├── EO
+├── ERB
+├── LY
+├── MMY
+├── MO
+├── MY
+├── PLT
+├── PMY
+└── SNE
+```
 
 ## Context
 The identification and classification of leukocytes, platelets and erythrocytes is crucial in the diagnosis of several hematological diseases, such as infectious diseases or regenerative anaemia.
