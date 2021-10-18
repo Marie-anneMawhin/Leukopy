@@ -36,9 +36,12 @@ Classification of white blood cells.
 
 ## Usage
 
-The datasets can be downloaded using the the links provided in their description: see [Data](#data).  
+The datasets can be downloaded using the the links provided in their description: see [Data](#data) and place in the data folder. 
+
+For the barcelone and the merge dataset: the notebook in `import` can generate the dataframe in `data`.
+
 The barcelone dataset *PBC_dataset_normal_Barcelona* can be used on its own.  
-The merge data should follow the following structure:
+The merge data should follow the following structure and be merged following the table in [Data](#data):
 ```bash
 ├── BA
 ├── BNE
