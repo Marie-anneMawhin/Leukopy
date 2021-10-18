@@ -26,7 +26,7 @@ Classification of white blood cells.
 └── streamlit
 ```
 
-```data```: csv indicating `path`, `label`, `size` of images.
+```data```: csv indicating `path`, `label`, `size` of images + test data `PBC_dataset_normal_CVB`
 
 ```demo```: `.py` files for testing our code.
 
