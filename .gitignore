@@ -6,9 +6,8 @@
 *.xyc
 *.zip
 *deconv.csv
-*data/PBS_dataset_ALL*
-*data/PBS_dataset_normal_DIB*
-*data/PBS_dataset_APL_AML*
+*data/PBS_dataset*
+*data/main_dataset*
 *.save
 *.swp
 *.virtual_documents*
