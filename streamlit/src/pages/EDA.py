@@ -5,11 +5,10 @@ from utils import eda
 
 
 
-
 def write():
     st.title('EDA')
 
-    df = pd.read_csv('src/data/df/PBC_dataset_normal_df.csv')
+    df = pd.read_csv('src/data/df/PBC_dataset_normal_df_merged.csv')
     
     # fig_cell = eda.plot_random_by_classes(df)
     # st.pyplot(fig_cell)
