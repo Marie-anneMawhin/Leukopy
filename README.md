@@ -81,13 +81,6 @@ Image size: 360 x 363 px, naming: <label>_<anonymised id>.jpg
 - erythroblasts - ERB
 <br />
  
-#### *PBC_dataset_normal_CVB*
-A publicly available small [dataset](https://data.mendeley.com/datasets/w7cvnmn4c5/1) from [CellaVision Blog](http://blog.cellavision.com/) of 100 images of healthy donors blood smears <sup>[2](#footnote1)</sup>
-
-Image size: 300 x 300 px, naming: in class_label_CVB.csv, labels (1- 5) corresponds respectively to neutrophil, lymphocyte, monocyte, eosinophil and basophil.
- 
-<br />
- 
  
  #### *PBC_dataset_normal_Raabin*
 A publicly available [dataset](https://raabindata.com/free-data/) around 15,000 images<sup>[3](#footnote3)</sup>. All samples are healthy except for a few basophils imaged from a leukemia patient and come from three laboratories in Iran: Razi Hospital in Rasht, Gholhak Laboratory, Shahr-e-Qods Laboratory and Takht-e Tavous Laboratory in Tehran.
