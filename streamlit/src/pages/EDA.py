@@ -5,7 +5,6 @@ from utils import eda
 
 
 
-
 def write():
     st.title('EDA')
 
