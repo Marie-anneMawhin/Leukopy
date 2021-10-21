@@ -14,7 +14,7 @@ def write():
 
 
     st.markdown("""
-    
+
     """)
     
     st.markdown("""## Contributors
