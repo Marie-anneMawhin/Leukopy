@@ -15,7 +15,6 @@ Classification of white blood cells.
 ├── demo
 ├── notebooks
 │   ├── EDA
-│   ├── import
 │   └── model
 │       ├── efficientNet
 │       ├── lenet
@@ -26,11 +25,11 @@ Classification of white blood cells.
 └── streamlit
 ```
 
-```data```: csv indicating `path`, `label`, `size` of images + test data `PBC_dataset_normal_CVB`
+```data```: `.csv` indicating `path`, `label`, `size` of images
 
 ```demo```: `.py` files for testing our code.
 
-```notebooks``` : jupyter notebooks containing import (to convert images to df), model (exploration of various models), EDA (data exploration).
+```notebooks``` : jupyter notebooks in the folders model (exploration of various models) and EDA (data exploration).
 
 ```streamlit```: streamlit app.
 
