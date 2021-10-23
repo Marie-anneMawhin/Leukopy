@@ -6,6 +6,7 @@ import matplotlib.cm as cm
 import sys, os, glob, shutil
 
 from collections import Counter
+from dask import bag, diagnostics
 
 
 from skimage import io, color, exposure, transform, img_as_float32
@@ -51,13 +52,60 @@ def load_image(filename,  as_grey=False, rescale=None, float32=True):
     return image
 
 
-def load_df(path_name):
+def add_columns(filename):
+    
+    im = io.imread(filename)
+    temp = pd.DataFrame(index=[0])
+
+    temp['height'] = im.shape[0] 
+    temp['width'] = im.shape[1]
+    temp['mean_brightness'] = np.mean(im)    
+    
+    im_gray = color.rgb2grey(im)
+    temp['mean_luminance'] = np.mean(im_gray)
+    
+    return temp
+
+def generate_df_dask(path):
+    df = pd.DataFrame()
+    df['img_path'] = [str(image_path) for ext in ['jpg', 'tiff', 'png'] 
+                      for image_path in path.glob(f'**/*.{ext}')]
+
+    df['label'] = [image_path.parts[-2] for ext in ['jpg', 'tiff', 'png'] 
+                   for image_path in path.glob(f'**/*.{ext}')]
+
+    df['label_2'] = [image_path.stem.split('_')[0] 
+                     for ext in ['jpg', 'tiff', 'png'] for image_path in path.glob(f'**/*.{ext}')]
+    
+    barca = ['MO', 'ERB', 'PLATELET', 'BA', 'BNE', 'SNE', 'LY', 'EO', 'MMY', 'PMY', 'MY']
+    munich = ['MON', 'EBO', 'BAS', 'NGB', 'NGS', 'LYT', 'EOS', 'MMZ', 'PMO', 'MYB']
+
+    df.loc[df.label_2.isin(barca),'origin']='barcelone'
+    df.loc[df.label_2.isin(munich),'origin']='munich'
+    df.origin.fillna('raabin', inplace=True)
+    
+    addcol_bag = bag.from_sequence(df.img_path.to_list()).map(add_columns)
+    with diagnostics.ProgressBar():
+        res = addcol_bag.compute()
+        
+    res_df = pd.concat(res).reset_index(drop=True)
+    df_temp = df.join(res_df)
+    return df_temp
+
+def load_df(path_name, from_folder=False):
     '''
     Args:
     -path_name: path to file as str
+    -from_folder: True to generate df from image folder.
     '''
     path = Path(path_name)
-    df = pd.read_csv(path_name)
+    
+    if from_folder:
+        df = generate_df_dask(path)
+        
+    else:
+        df = pd.read_csv(path)
+    
     return df
 
 
