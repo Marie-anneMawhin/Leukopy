@@ -19,7 +19,7 @@ Classification of white blood cells.
 │       ├── efficientNet
 │       ├── lenet
 │       ├── vgg16
-│       ├── vgg19
+│       ├── vgg19 (version alldata livrable et exécutable sur Google Colab)
 │       ├── ViT
 │       └── Xception
 └── streamlit
