@@ -110,7 +110,7 @@ def main(): #write():
                          
      
                               base_model, str_result,img=Function_VGG16_SVM_8_C_AF(image_file)
-                              st.write(str_result)
+                              st.write(Model_flag) #(str_result)
                                                          
                                                                                                
                      if  Model_flag=="VGG16_SVM_8_C_SF_flag":
@@ -127,8 +127,9 @@ def main(): #write():
                 ################### begin vgg16+SVM #########################   
                     
                    if select_model=="vgg16+SVM":
-                                     big_heatmap, superimposed_img = gradcam(base_model, img, alpha = 0.8, plot = False)  
-                                     st.image(superimposed_img,width=150) 
+                                     big_heatmap, superimposed_img = gradcam(base_model, img, image_file, alpha = 0.8, plot = False)  
+                                     st.image(superimposed_img,width=150)
+                                     #st.write(big_heatmap)
                                                                                              
                        
                  ################### end vgg16+SVM #########################"                              

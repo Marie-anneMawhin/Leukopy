@@ -64,7 +64,7 @@ def make_heatmap(img_array, model1, last_conv_layer, class_index):
   heatmap = np.mean(heatmap_tmp, axis=-1)
   return heatmap
 
-def gradcam(model1, img, class_index = None, alpha = 0.5, plot = True):
+def gradcam(model1, img, image_file,class_index = None, alpha = 0.5, plot = True):
 
   # Détecte la dernière couche de convolution (pas terrible : il faudrait sélectionner sur le type, pas sur le nom) :
   for layer in reversed(model1.layers):                ################
@@ -74,6 +74,22 @@ def gradcam(model1, img, class_index = None, alpha = 0.5, plot = True):
   
   # Chargement + mise en forme de l'image :
   img_array = get_img_array(img)
+  
+  
+  
+  
+  #return np.array(img).shape,0
+  if np.array(img_array).shape[3]==4:  #si c'est un fichier tiff
+          im=Image.open(image_file)
+          img=im.convert("RGB")
+          img_height, img_width=224,224
+
+          img_array = tf.keras.preprocessing.image.img_to_array(img)  
+          img_array = np.expand_dims(img_array, axis = 0)                 
+                                #img_array = img_array.convert("RGB")
+                                #img_array = img_array.resize((224, 224))   
+  
+  
   """
   # Choix de la classe à représenter :
   if class_index == None :
