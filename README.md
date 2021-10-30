@@ -19,11 +19,12 @@ Classification of white blood cells.
 │       ├── efficientNet
 │       ├── lenet
 │       ├── vgg16
-│       ├── vgg19 (version alldata livrable et exécutable sur Google Colab)
+│       ├── vgg19*
 │       ├── ViT
 │       └── Xception
 └── streamlit
 ```
+(*) **VGG19** Version for all data available and executable on Drive: [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/drive/1jhHDNu3z0rOnu1RJbw10Sftb_WT8R8el)  
 
 ```data```: `.csv` indicating `path`, `label`, `size` of images
 
