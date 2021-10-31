@@ -23,7 +23,7 @@ import tensorflow as tf
 
 ###################### General functions ######################
 
-def load_image(filename,  as_grey=False, rescale=None, float32=True):
+def load_image(filename: str,  as_grey: bool = False, rescale: float = None, float32: bool = True) -> np.ndarray:
     '''
     load images from path
     
@@ -244,98 +244,62 @@ def compute_weights(training_set, method = None):
 
 
 
-############################################## GRADCAM FUNCTIONS ##############################################
-
-def get_img_array(img_path, img_size):
-
-    img = tf.keras.preprocessing.image.load_img(img_path, target_size = img_size)
+############################################## GRADCAM VIT ##############################################
+def get_img_array(img_path: str, dim: tuple) -> np.ndarray:
+    img = tf.keras.preprocessing.image.load_img(Path(img_path), target_size = dim)
     array = tf.keras.preprocessing.image.img_to_array(img)
-    array = np.expand_dims(array, axis = 0)
-    return array
+    array = np.expand_dims(img, axis = 0)
+    return array, img
 
-def make_heatmap(img_array, model, last_conv_layer, class_index):
+def make_gradcam_heatmap(img_array: np.ndarray, model, layer_name: str):
+    
+    for layer in reversed(model.layers):
+        if layer_name in layer.name:
+            last_conv_layer = model.get_layer(layer.name)
+            break
 
-    grad_model = tf.keras.models.Model([model.inputs], [last_conv_layer.output, model.output])
+    grad_model = tf.keras.models.Model(
+        [model.inputs], 
+        [last_conv_layer.output,  model.output])
+
     with tf.GradientTape() as tape:
         last_conv_layer_output, preds = grad_model(img_array)
-
-        class_channel = preds[:, class_index]
+        pred_index = tf.argmax(preds[0])
+        class_channel = preds[:, pred_index]
 
     grads = tape.gradient(class_channel, last_conv_layer_output)
-    pooled_grads = tf.reduce_mean(grads, axis = (0, 1, 2))
+    pooled_grads = tf.reduce_mean(grads, axis=(0, 1))
 
-    heatmap_tmp = last_conv_layer_output[0].numpy()
+    last_conv_layer_output = last_conv_layer_output#[0]
+    heatmap = last_conv_layer_output @ pooled_grads[..., tf.newaxis]
+    heatmap = tf.squeeze(heatmap)[1:]
+    heatmap = tf.maximum(heatmap, 0) / tf.math.reduce_max(heatmap)
+    return heatmap.numpy()
 
-    for i in range(512):
-        heatmap_tmp[:,:,i] *= pooled_grads[i]
-        heatmap = np.mean(heatmap_tmp, axis=-1)
-    return heatmap
-
-def gradcam(model, img_path, class_index = None, alpha = 0.5, plot = True):
-
-    # Détecte la dernière couche de convolution (pas terrible : il faudrait sélectionner sur le type, pas sur le nom) :
-    for layer in reversed(model.layers):
-        if 'conv' in layer.name:
-          last_conv_layer = model.get_layer(layer.name)
-          break
-
-    # Chargement + mise en forme de l'image :
-    img_array = get_img_array(img_path, size = (img_height, img_width))
-
-    # Choix de la classe à représenter :
-    if class_index == None :
-    # Désactiver Sotfmax sur la couche de sortie :
-        model.layers[-1].activation = None
-        # Prédiction + classe la plus probable :
-        predict = model.predict(img_array)
-        class_index = np.argmax(predict[0])
-
-    # Calcul de la CAM : resize pour comparaison avec l'image finale
-    heatmap = make_heatmap(img_array, model, last_conv_layer, class_index)
-    big_heatmap = heatmap
-    #big_heatmap = cv2.resize(heatmap, dsize = (img_height, img_width), interpolation = cv2.INTER_CUBIC)
-
-    ## Traitement de la Heatmap
-    # 1/ Normalisation
-    big_heatmap = big_heatmap/big_heatmap.max()
-    # 2/ On passe dans ReLu, pour flinguer les valeurs négatives
-    big_heatmap = np.maximum(0, big_heatmap)
-
-    ## Superposition de l'image et de la Heatmap 
-    # 1/ Import de l'image d'origine
-    img = tf.keras.preprocessing.image.load_img(img_path)
+def gradcam(img_path: str, img_size: int, model: Model, layer_name: str) -> 'image':
+    
+    arr, img = get_img_array(img_path, (img_size, img_size))
     img = tf.keras.preprocessing.image.img_to_array(img)
 
-    # 2/ Rescale heatmap: 0-255
-    big_heatmap = np.uint8(255*big_heatmap)
-
-    # 3/ Jet colormap
+    heatmap = make_gradcam_heatmap(arr, model, layer_name)
+    heatmap = np.uint8(255 * heatmap)
+    
+    size_embedding = model.layers[1].output_shape[1]
+    heatmap = np.reshape(heatmap, (size_embedding,size_embedding))
     jet = cm.get_cmap("jet")
+    jet_colors = jet(np.arange(256))[..., :-1]
+    jet_heatmap = jet_colors[heatmap]
 
-    # 4/ Use RGB values of the colormap
-    jet_colors = jet(np.arange(256))[:, :3]
-    jet_heatmap = jet_colors[big_heatmap]
 
-    # 5/ Create an image with RGB colorized heatmap
-    jet_heatmap = tf.keras.preprocessing.image.array_to_img(jet_heatmap)
+    jet_heatmap = keras.preprocessing.image.array_to_img(jet_heatmap)
     jet_heatmap = jet_heatmap.resize((img.shape[1], img.shape[0]))
     jet_heatmap = tf.keras.preprocessing.image.img_to_array(jet_heatmap)
 
-    # 6/ Superimpose the heatmap on original image
-    superimposed_img = jet_heatmap*alpha + img
-    superimposed_img = tf.keras.preprocessing.image.array_to_img(superimposed_img)
-
-    if plot == True:
-        # 7/ Affichage des résultats
-        fig = plt.figure(figsize = (8,8))
-        fig.add_subplot(1,2,1)
-        plt.imshow(big_heatmap)
-
-        fig.add_subplot(1,2,2)
-        plt.imshow(superimposed_img)
-        plt.title("Chosen class : "+str(list(label_map.keys())[class_index]))
-        return big_heatmap, superimposed_img
+    superimposed_img = jet_heatmap * 0.8 + img
+    superimposed_img = keras.preprocessing.image.array_to_img(superimposed_img)
     
+    return superimposed_img
+
     
     
 # # Specific to colab
