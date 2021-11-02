@@ -1,12 +1,29 @@
 import streamlit as st
 
+from importlib import reload
+
+import data.model.vgg19.utils.vgg19_utils as vgg19_utils
+reload(vgg19_utils)
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 model_list = ["vgg16", "vgg19", "ViT"]
 
 def write():
     st.subheader('Classification')
 
-    st.selectbox("Select model", options=model_list)
+    model_choice = st.selectbox("Select model", options=model_list)
 
         
     img_file=st.file_uploader(
@@ -32,10 +49,13 @@ def write():
                 
         with col2:
             with st.expander("Classified as"):
-                pass
                 
-                # if normalize_case1:    # c'est ici que chaqu'un peut mettre son modèle
-                #     pass
+                if model_choice == "vgg19":   
+                    fig, gcams = vgg19_utils.load_vgg19(img_file)
+                    st.pyplot(fig)
+                    
+                    #st.image([gcams[0], gcams[1], gcams[2]], width = 150)
+                    
                 # if normalize_case2:
                 #     pass
                 # if normalize_case3:

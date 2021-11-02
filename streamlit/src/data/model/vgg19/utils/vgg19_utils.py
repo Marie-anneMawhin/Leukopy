@@ -2,9 +2,13 @@ import streamlit as st
 
 import tensorflow as tf
 from tensorflow.keras.applications.vgg19 import preprocess_input
+from tensorflow.keras.preprocessing.image import ImageDataGenerator
+
 import numpy as np
+import pandas as pd
 
 from pathlib import Path
+
 
 import matplotlib.pyplot as plt
 import matplotlib.cm as cm
@@ -14,45 +18,16 @@ from PIL import Image
 
 ## PARAMETERS
 
+batch_size = 32
 img_height = 360
 img_width  = 360
 classes = ["BA","BNE","EO","ERB","LY","MMY","MO","MY","PLT","PMY","SNE"]
 label_map = {'BA': 0, 'BNE': 1, 'EO': 2, 'ERB': 3, 'LY': 4, 'MMY': 5, 'MO': 6, 'MY': 7, 'PLT': 8, 'PMY': 9, 'SNE': 10}
 
-
-def load_model(path):
-    """
-    Load a model whose weights are saved in Leukopy/streamlit/src/data/model/vgg19/weights
-
-    Parameters
-    ----------
-    path : Path object, 
-        Chemin d'accès conduisant aux poids du modèle.
-
-    Returns
-    -------
-    model : tf.Model()
-        Modèle pré-entraîné (poids, structure, optimiseur).
-
-    """
-
-    model = tf.keras.models.load_model(path)
-    return model
+vgg19_path = Path("./data/model/vgg19/weights")
 
 
-def get_img_array(img_file, size = (img_height, img_width)):
-    img = Image.open(img_file)
-    img = img.convert('RGB')
-    img = img.resize(size)
-    img = np.array(img)
-    print("Array Dims :",img.shape)
-    
-    img = np.expand_dims(img, axis = 0)
-    print("After Expand :", img.shape)
-    img = preprocess_input(img)   
-    print("After VGG19 PP :", img.shape)
-    return img
-
+#GRAD-CAM :
 
 def make_heatmap(img_array, model, last_conv_layer, class_index):
 
@@ -74,122 +49,111 @@ def make_heatmap(img_array, model, last_conv_layer, class_index):
     return heatmap
 
 
-def gradcam(model, img_path, img_height, img_width, class_index = None, alpha = 0.5, plot = True):
+def gradcam(model, img, img_orig, 
+            img_height, img_width, class_index, 
+            alpha = 0.5):
     
+    ## Calcul de la Heatmap :
     # Désactive softmax sur la dernière couche :
-    model.layers[-1].activation = None
-    
+    model.layers[-1].activation = None    
     # Détecte la dernière couche de convolution du modèle :
     for layer in reversed(model.layers):
         if 'conv' in layer.name:
             last_conv_layer = model.get_layer(layer.name)
             break
-
-    # Chargement + preprocessing de l'image :
-    img_array = get_img_array(img_path, size = (img_height, img_width))
-    
-    # Choix de la classe à représenter (si class_index non renseigné) :
-    if class_index == None :
-        # Trouve la classe la plus probable :
-        predict = model.predict(img_array)
-        class_index = np.argmax(predict[0])
-
-    # Calcul de la CAM : resize pour superposition avec l'image finale
-    heatmap = make_heatmap(img_array, model, last_conv_layer, class_index)
-    big_heatmap = heatmap
-    
+    # Calcul
+    heatmap = make_heatmap(img, model, last_conv_layer, class_index)
     # Réactive softmax :
     model.layers[-1].activation = tf.keras.activations.softmax
 
-    ## Traitement de la Heatmap
-    # Applique ReLu (élimine les valeurs négatives de la heatmap)
-    big_heatmap = np.maximum(0, big_heatmap)
-    # Normalisation
-    big_heatmap = big_heatmap/big_heatmap.max()
-    
-    ## Superposition de l'image et de la heatmap 
-    # 1/ Import de l'image d'origine
-    img = tf.keras.preprocessing.image.load_img(img_path)
-    img = tf.keras.preprocessing.image.img_to_array(img)
 
-    # 2/ Rescale heatmap: 0-255
-    big_heatmap = np.uint8(255*big_heatmap)
-    # 3/ Jet colormap
+    ## Traitement de la Heatmap :
+    # Applique ReLu (élimine les valeurs négatives de la heatmap)
+    heatmap = np.maximum(0, heatmap)
+    # Normalisation
+    heatmap = heatmap/heatmap.max()
+    
+    
+    ## Superposition de l'image "img_orig" et de la heatmap
+    # 1/ Rescale heatmap: 0-255
+    heatmap = np.uint8(255*heatmap)
+    # 2/ Jet colormap
     jet = cm.get_cmap("jet")
-    # 4/ Use RGB values of the colormap
+    # 3/ Use RGB values of the colormap
     jet_colors = jet(np.arange(256))[:, :3]
-    jet_heatmap = jet_colors[big_heatmap]
-    # 5/ Create an image with RGB colorized heatmap
+    jet_heatmap = jet_colors[heatmap]
+    # 4/ Create an image with RGB colorized heatmap
     jet_heatmap = tf.keras.preprocessing.image.array_to_img(jet_heatmap)
-    jet_heatmap = jet_heatmap.resize((img.shape[1], img.shape[0]))
+    jet_heatmap = jet_heatmap.resize((img_orig.shape[1], img_orig.shape[0]))
     jet_heatmap = tf.keras.preprocessing.image.img_to_array(jet_heatmap)
     # 6/ Superimpose the heatmap on original image
-    superimposed_img = jet_heatmap*alpha + img
+    superimposed_img = jet_heatmap*alpha + img_orig
     superimposed_img = tf.keras.preprocessing.image.array_to_img(superimposed_img)
 
-    if plot == True:
-        # 7/ Affichage des résultats
-        fig = plt.figure(figsize = (8,8))
-        fig.add_subplot(1,2,1)
-        plt.imshow(big_heatmap)
+    return superimposed_img
 
-        fig.add_subplot(1,2,2)
-        plt.imshow(superimposed_img)
-        plt.title("Chosen class : "+str(list(label_map.keys())[class_index]))
+# Load model :
+#@st.cache 
+def load_model(path):
+    model = tf.keras.models.load_model(path)
+    return model
 
-    return big_heatmap, superimposed_img
-
-
-def full_prediction(model, img_file, size = (img_height, img_width), label_provided = False):
-
-    print("In full_prediction !")
+# Image Preprocessing :
+def get_img_array(img_file, size = (img_height, img_width), preprocess = True):
     
-    # Preprocessing :
-    if img_file is not None:
-        img = get_img_array(img_file, size)
-        
-    print("Preprocessing done !")
+    img = Image.open(img_file)
+    img = img.convert('RGB')
+    img = img.resize(size)
+    img = np.array(img)
+    print("Array Dims :",img.shape)
+    
+    # Pour prediction seulement : batch + VGG19preprocessing
+    if preprocess == True:
+        img = np.expand_dims(img, axis = 0)
+        print("After Expand :", img.shape)
+    
+        img = preprocess_input(img)   
+        print("After VGG19 PP :", img.shape)
+    return img
 
-    # Prediction
-    probas = model.predict(img)[0]
-    sorted_indexes = np.flip(np.argsort(probas))
+
+# Main function
+def load_vgg19(img_file):
+    # Import model
+    model = load_model(vgg19_path)
+    
+    # Preprocessing de l'image
+    img = get_img_array(img_file, size = (img_height, img_width))
+    img_orig = get_img_array(img_file, size = (img_height, img_width), preprocess = False)
+    print("load_vgg19 : preprocess - ", "img : ", img.shape, "img_orig :", img_orig.shape)
+    
+    # Prediction :
+    preds = model.predict(img)[0]
+    sorted_indexes = np.flip(np.argsort(preds))
+    sorted_preds = [preds[i] for i in sorted_indexes]
     sorted_classes = [classes[i] for i in sorted_indexes]
-    sorted_probas = [probas[i] for i in sorted_indexes]
     
-    print(sorted_classes[0], sorted_probas[0])
+    print(preds)
+    print(sorted_classes)
 
-    # Plot (3 classes les plus probables)
-    #fig = plt.figure(figsize = (12,12))
-    #ax1 = fig.add_subplot(1,1,1)
-    #st.image(img, width=150)
-    #ax1.text(x = 10, y = 25, s = 'P(%s) = %0.3f'%(sorted_classes[0], sorted_probas[0]), fontsize = 'xx-large')
-    #ax1.text(x = 10, y = 55, s = 'P(%s) = %0.3f'%(sorted_classes[1], sorted_probas[1]), fontsize = 'xx-large')
-    #ax1.text(x = 10, y = 85, s = 'P(%s) = %0.3f'%(sorted_classes[2], sorted_probas[2]), fontsize = 'xx-large')
-    #plt.grid(None)
-    #plt.axis('off')
+    # Grad-CAM : plot the 3 most probable classes :
+    fig = plt.figure(figsize = (8,8))
+    
+    gcams = []
+    for i, id in enumerate(sorted_indexes[:3]):    
 
-    #ax2 = fig.add_subplot(1,4,2)
-    #big_heatmap, superimposed_img = gradcam(model, img_path, img_height, img_width, 
-    #                                        class_index = sorted_indexes[0], alpha = 0.8, plot = False)
-    #ax2.imshow(superimposed_img)
-    #ax2.set_title('Grad-CAM for '+sorted_classes[0], fontsize = 24)
-    #plt.grid(None)
-    #plt.axis('off')
-
-    #ax3 = fig.add_subplot(1,4,3)
-    #big_heatmap, superimposed_img = gradcam(model, img_path, img_height, img_width, 
-    #                                        class_index = sorted_indexes[1], alpha = 0.8, plot = False)
-    #ax3.imshow(superimposed_img)
-    #ax3.set_title('Grad-CAM for '+sorted_classes[1], fontsize = 24)
-    #plt.grid(None)
-    #plt.axis('off')
-
-    #ax4 = fig.add_subplot(1,4,4)
-    #big_heatmap, superimposed_img = gradcam(model, img_path, img_height, img_width, 
-    #                                        class_index = sorted_indexes[2], alpha = 0.8, plot = False)
-    #ax4.imshow(superimposed_img)
-    #ax4.set_title('Grad-CAM for '+sorted_classes[2], fontsize = 24)
-    #plt.grid(None)
-    #plt.axis('off')
-
-    return
+        superimposed_img = gradcam(model, img, img_orig, 
+                                   img_height, img_width, 
+                                   class_index = id, alpha = 0.8)
+        
+        ax = fig.add_subplot(2,2,i+1)
+        ax.imshow(superimposed_img)
+        ax.set_title('Grad-CAM for '+ sorted_classes[i], fontsize = 14)
+        ax.text(x = 10, y = 30, s = 'P(%s) = %0.3f'%(sorted_classes[i], sorted_preds[i]), fontsize = 14)
+        
+        plt.grid(None)
+        plt.axis('off')
+        
+        gcams.append(superimposed_img)
+        
+    return fig, gcams
