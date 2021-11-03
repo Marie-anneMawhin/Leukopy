@@ -10,14 +10,6 @@ reload(vgg19_utils)
 
 
 
-
-
-
-
-
-
-
-
 model_list = ["vgg16", "vgg19", "ViT"]
 
 def write():
@@ -34,27 +26,28 @@ def write():
     if img_file:
         img = img_file.read()
 
-        file_details= f"""
-        Name: {img_file.name}
-        Size:{img_file.size}
-        Type:{img_file.type}"""
+        #file_details= f"""
+        #Name: {img_file.name}
+        #Size:{img_file.size}
+        #Type:{img_file.type}"""
         
-
         col1,col2 = st.columns(2)
         with col1:
-            st.subheader("Original image")
+            st.subheader("Original image ...")
                 
             st.image(img, width=150)
-            st.caption(file_details)
+            #st.caption(file_details)
                 
         with col2:
-            with st.expander("Classified as"):
+            with st.container():
+                st.subheader("... is probably :")
                 
-                if model_choice == "vgg19":   
-                    fig, gcams = vgg19_utils.load_vgg19(img_file)
+                if model_choice == "vgg19":
+                    # Importe le modèle (en cache)
+                    model = vgg19_utils.load_model()
+                    # Prédiction + Grad-CAM
+                    fig = vgg19_utils.vgg19_prediction(model, img_file)
                     st.pyplot(fig)
-                    
-                    #st.image([gcams[0], gcams[1], gcams[2]], width = 150)
                     
                 # if normalize_case2:
                 #     pass

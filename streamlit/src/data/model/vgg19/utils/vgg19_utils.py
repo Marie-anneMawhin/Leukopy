@@ -26,7 +26,6 @@ label_map = {'BA': 0, 'BNE': 1, 'EO': 2, 'ERB': 3, 'LY': 4, 'MMY': 5, 'MO': 6, '
 
 vgg19_path = Path("./data/model/vgg19/weights")
 
-
 #GRAD-CAM :
 
 def make_heatmap(img_array, model, last_conv_layer, class_index):
@@ -93,10 +92,12 @@ def gradcam(model, img, img_orig,
     return superimposed_img
 
 # Load model :
-#@st.cache 
-def load_model(path):
-    model = tf.keras.models.load_model(path)
+@st.cache(allow_output_mutation=True)
+def load_model():
+    model = tf.keras.models.load_model(vgg19_path)
+    model.summary()
     return model
+
 
 # Image Preprocessing :
 def get_img_array(img_file, size = (img_height, img_width), preprocess = True):
@@ -110,22 +111,39 @@ def get_img_array(img_file, size = (img_height, img_width), preprocess = True):
     # Pour prediction seulement : batch + VGG19preprocessing
     if preprocess == True:
         img = np.expand_dims(img, axis = 0)
-        print("After Expand :", img.shape)
-    
-        img = preprocess_input(img)   
-        print("After VGG19 PP :", img.shape)
+        img = preprocess_input(img)
     return img
+
+#def get_img_array_2(img_file, size = (img_height, img_width), preprocess = True):
+#    df_user = pd.DataFrame({"img_path":,"label":None})
+#    user_generator = ImageDataGenerator()
+#    user_set = user_generator.flow(df_user,
+#                                                  x_col='img_path', 
+#                                                  y_col='label',
+#                                                  target_size=(img_height, img_width), 
+#                                                  color_mode='rgb',
+#                                                  classes=None, 
+#                                                  class_mode=None, 
+#                                                  batch_size=batch_size, 
+#                                                  shuffle=False,
+#                                                  preprocessing_function=preprocess_input)
+
+#    img_array = tf.convert_to_tensor(user_set.__getitem__(0))
+#    return img_array
+
+@st.cache()
+def preprocessing(img_file, size = (img_height, img_width)):
+    img = get_img_array(img_file, size = (img_height, img_width))
+    img_orig = get_img_array(img_file, size = (img_height, img_width), preprocess = False)
+    return img, img_orig
 
 
 # Main function
-def load_vgg19(img_file):
-    # Import model
-    model = load_model(vgg19_path)
-    
+def vgg19_prediction(model,img_file):
     # Preprocessing de l'image
-    img = get_img_array(img_file, size = (img_height, img_width))
-    img_orig = get_img_array(img_file, size = (img_height, img_width), preprocess = False)
-    print("load_vgg19 : preprocess - ", "img : ", img.shape, "img_orig :", img_orig.shape)
+    img, img_orig = preprocessing(img_file, size = (img_height, img_width))
+    #img = get_img_array(img_file, size = (img_height, img_width))
+    #img_orig = get_img_array(img_file, size = (img_height, img_width), preprocess = False)
     
     # Prediction :
     preds = model.predict(img)[0]
@@ -139,7 +157,6 @@ def load_vgg19(img_file):
     # Grad-CAM : plot the 3 most probable classes :
     fig = plt.figure(figsize = (8,8))
     
-    gcams = []
     for i, id in enumerate(sorted_indexes[:3]):    
 
         superimposed_img = gradcam(model, img, img_orig, 
@@ -148,12 +165,11 @@ def load_vgg19(img_file):
         
         ax = fig.add_subplot(2,2,i+1)
         ax.imshow(superimposed_img)
-        ax.set_title('Grad-CAM for '+ sorted_classes[i], fontsize = 14)
-        ax.text(x = 10, y = 30, s = 'P(%s) = %0.3f'%(sorted_classes[i], sorted_preds[i]), fontsize = 14)
+        ax.set_title(sorted_classes[i] +' (%s)'%(str(sorted_preds[i]*100)[:4]+'%'), fontsize = 14)
+        #ax.text(x = 10, y = 30, s = 'P(%s) = %s'%(sorted_classes[i], str(sorted_preds[i]*100)[:4]+'%'), fontsize = 14)
         
         plt.grid(None)
         plt.axis('off')
+
         
-        gcams.append(superimposed_img)
-        
-    return fig, gcams
+    return fig
