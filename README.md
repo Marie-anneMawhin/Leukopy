@@ -24,7 +24,7 @@ Classification of white blood cells.
 │       └── Xception
 └── streamlit
 ```
-(*) **VGG19** Version for all data available and executable on Drive: [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/drive/1jhHDNu3z0rOnu1RJbw10Sftb_WT8R8el)  
+(*) **VGG19** Version for all data available and executable on Drive: [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://drive.google.com/file/d/1rjNVlA6UtFM7uT9kQFlePRRp4cTB0kcl/view?usp=sharing)  
 
 ```data```: `.csv` indicating `path`, `label`, `size` of images
 
