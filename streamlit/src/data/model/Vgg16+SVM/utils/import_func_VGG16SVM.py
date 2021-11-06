@@ -41,8 +41,10 @@ import tensorflow as tf
 def get_img_array(img):
   img_height, img_width=224,224
   #img = tf.keras.preprocessing.image.load_img(img_path, target_size = size)
+  
   array = tf.keras.preprocessing.image.img_to_array(img)
   array = np.expand_dims(array, axis = 0)
+  array=preprocess_input(array)
   return array
 
 def make_heatmap(img_array, model1, last_conv_layer, class_index):
@@ -83,9 +85,10 @@ def gradcam(model1, img, image_file,class_index = None, alpha = 0.5, plot = True
           im=Image.open(image_file)
           img=im.convert("RGB")
           img_height, img_width=224,224
-
+         
           img_array = tf.keras.preprocessing.image.img_to_array(img)  
-          img_array = np.expand_dims(img_array, axis = 0)                 
+          img_array = np.expand_dims(img_array, axis = 0) 
+          img_array=preprocess_input(img_array)                
                                 #img_array = img_array.convert("RGB")
                                 #img_array = img_array.resize((224, 224))   
   
