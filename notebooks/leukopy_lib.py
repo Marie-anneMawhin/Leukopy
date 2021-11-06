@@ -237,6 +237,16 @@ def sel_n_classes(df, n_classes):
 def choose_classes(df_train, df_test, df_valid, n_classes=12):
     return n_classes, sel_n_classes(df_train, n_classes), sel_n_classes(df_test, n_classes), sel_n_classes(df_valid, n_classes)
 
+def read_df_locally(path: Path, df: str) -> pd.DataFrame:
+    
+    df = df+'.csv'
+    
+    df = pd.read_csv(path/df)
+    
+    df['img_path'] = df['img_path'].str.replace('/content/dataset', str(path))
+    
+    return df
+
 
 # Calcul des poids pour compenser le déséquilibre des classes
 
