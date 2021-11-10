@@ -28,8 +28,6 @@ Classification of white blood cells.
 
 ```data```: `.csv` indicating `path`, `label`, `size` of images
 
-```demo```: `.py` files for testing our code.
-
 ```notebooks``` : jupyter notebooks in the folders model (exploration of various models) and EDA (data exploration).
 
 ```streamlit```: streamlit app.
@@ -154,24 +152,4 @@ Marie-Anne Mawhin
 Laleh Ravanbod
 
 Yahia Bouzoubaa
- 
-## How to update new packages
 
-### > I want to install new package
-
-```
-cd PROJECT_ROOT_DIRECTORY
-pip install PACKAGE_NAME
-pip-chill > requirements.txt
-git add requirements.txt
-git commit -m "COMMENT"
-git pull
-git push
-```
-### > I want to update packages according to other's changes
-```
-cd PROJECT_ROOT_DIRECTORY
-git pull
-pip install -r requirements.txt
-```
-**Note** The commands in capital letters are placeholders.
