@@ -3,6 +3,8 @@ import numpy as np
 import seaborn as sns
 import matplotlib.pyplot as plt
 import matplotlib.cm as cm
+from PIL.Image import Image
+
 import sys, os, glob, shutil
 
 from collections import Counter
@@ -12,30 +14,24 @@ from dask import bag, diagnostics
 from skimage import io, color, exposure, transform, img_as_float32
 import skimage
 
-from sklearn.model_selection import train_test_split
-from sklearn.utils.class_weight import compute_class_weight
 
-
+import pickle
 from pathlib import Path
 
 import tensorflow as tf
-
 import tensorflow as tf
 import tensorflow_addons as tfa
 from tensorflow.keras import layers
-from tensorflow.keras.models import Sequential
-from tensorflow.keras.optimizers import Adam
 from tensorflow.keras import Model
 from tensorflow import keras
-import pickle
-
-
 from tensorflow.keras.preprocessing.image import ImageDataGenerator
-from tensorflow.keras.callbacks import ModelCheckpoint, ReduceLROnPlateau, TerminateOnNaN, EarlyStopping
-
-from tensorflow.keras.utils import Sequence
-from collections import Counter
+from keras.models import load_model
+from sklearn.metrics import classification_report, confusion_matrix
 from sklearn.utils.class_weight import compute_class_weight
+from sklearn.model_selection import train_test_split
+
+from vit_keras import vit, utils
+
 ###################### General functions ######################
 
 def load_image(filename: str,  as_grey: bool = False, rescale: float = None, float32: bool = True) -> np.ndarray:
@@ -269,14 +265,16 @@ def compute_weights(training_set, method = None):
 
 
 
-############################################## GRADCAM VIT ##############################################
+##############################################  VIT FUNCTIONS ##############################################
 def get_img_array(img_path: str, dim: tuple) -> np.ndarray:
     img = tf.keras.preprocessing.image.load_img(Path(img_path), target_size = dim)
     array = tf.keras.preprocessing.image.img_to_array(img)
     array = np.expand_dims(img, axis = 0)
     return array, img
 
-def make_gradcam_heatmap(img_array: np.ndarray, model, layer_name: str):
+def make_gradcam_heatmap(img_array: np.ndarray, model, layer_name: str, pred_index: int = None) -> np.ndarray:
+    
+    model.layers[-1].activation = None
     
     for layer in reversed(model.layers):
         if layer_name in layer.name:
@@ -289,7 +287,9 @@ def make_gradcam_heatmap(img_array: np.ndarray, model, layer_name: str):
 
     with tf.GradientTape() as tape:
         last_conv_layer_output, preds = grad_model(img_array)
-        pred_index = tf.argmax(preds[0])
+        
+        if pred_index == None:
+            pred_index = tf.argmax(preds[0])
         class_channel = preds[:, pred_index]
 
     grads = tape.gradient(class_channel, last_conv_layer_output)
@@ -301,10 +301,7 @@ def make_gradcam_heatmap(img_array: np.ndarray, model, layer_name: str):
     heatmap = tf.maximum(heatmap, 0) / tf.math.reduce_max(heatmap)
     return heatmap.numpy()
 
-def gradcam(img_path: str, img_size: int, model: Model, layer_name: str) -> 'image':
-    
-    arr, img = get_img_array(img_path, (img_size, img_size))
-    img = tf.keras.preprocessing.image.img_to_array(img)
+def gradcam_vit(model: Model, arr: np.ndarray, img: np.ndarray, layer_name: str,  pred_index: int = None) -> Image:
 
     heatmap = make_gradcam_heatmap(arr, model, layer_name)
     heatmap = np.uint8(255 * heatmap)
@@ -324,9 +321,10 @@ def gradcam(img_path: str, img_size: int, model: Model, layer_name: str) -> 'ima
     superimposed_img = keras.preprocessing.image.array_to_img(superimposed_img)
     
     return superimposed_img
+    
+    
+    
 
-    
-    
 # # Specific to colab
 # # Gives access to the Drive
 # from google.colab import drive
