@@ -1,5 +1,4 @@
 import streamlit as st
-from utils.common import _max_width_
 
 def write():
     st.title("Leukopy 🩸 - blood cell classifier")
