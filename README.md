@@ -2,6 +2,10 @@
 
 Classification of white blood cells.
 
+
+## Context
+The identification and classification of leukocytes, platelets and erythrocytes is crucial in the diagnosis of several hematological diseases, such as infectious diseases, regenerative anaemia or leukemia.
+
 # Table of content
  * [Repository structure](#repository-structure)
  * [Context](#context)
@@ -53,10 +57,6 @@ The merge data should follow the following structure and be merged following the
 ├── PMY
 └── SNE
 ```
-
-## Context
-The identification and classification of leukocytes, platelets and erythrocytes is crucial in the diagnosis of several hematological diseases, such as infectious diseases or regenerative anaemia.
-A broader approach will aim at classifying other abnormal cells related to acute leukemia.
 
 ## Data
 
