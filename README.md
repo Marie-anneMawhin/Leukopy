@@ -8,7 +8,7 @@ The identification and classification of leukocytes, platelets and erythrocytes 
 
 # Table of content
  * [Repository structure](#repository-structure)
- * [Context](#context)
+ * [Usage](#usage)
  * [Data](#data)
  * [Contributors](#contributors)
 
