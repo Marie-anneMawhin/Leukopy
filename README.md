@@ -2,9 +2,13 @@
 
 Classification of white blood cells.
 
+
+## Context
+The identification and classification of leukocytes, platelets and erythrocytes is crucial in the diagnosis of several hematological diseases, such as infectious diseases, regenerative anaemia or leukemia.
+
 # Table of content
  * [Repository structure](#repository-structure)
- * [Context](#context)
+ * [Usage](#usage)
  * [Data](#data)
  * [Contributors](#contributors)
 
@@ -15,22 +19,20 @@ Classification of white blood cells.
 ├── demo
 ├── notebooks
 │   ├── EDA
-│   ├── import
 │   └── model
 │       ├── efficientNet
 │       ├── lenet
 │       ├── vgg16
-│       ├── vgg19
+│       ├── vgg19*
 │       ├── ViT
 │       └── Xception
 └── streamlit
 ```
+(*) **VGG19** Version for all data available and executable on Drive: [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://drive.google.com/file/d/1rjNVlA6UtFM7uT9kQFlePRRp4cTB0kcl/view?usp=sharing)  
 
-```data```: csv indicating `path`, `label`, `size` of images + test data `PBC_dataset_normal_CVB`
+```data```: `.csv` indicating `path`, `label`, `size` of images
 
-```demo```: `.py` files for testing our code.
-
-```notebooks``` : jupyter notebooks containing import (to convert images to df), model (exploration of various models), EDA (data exploration).
+```notebooks``` : jupyter notebooks in the folders model (exploration of various models) and EDA (data exploration).
 
 ```streamlit```: streamlit app.
 
@@ -56,10 +58,6 @@ The merge data should follow the following structure and be merged following the
 └── SNE
 ```
 
-## Context
-The identification and classification of leukocytes, platelets and erythrocytes is crucial in the diagnosis of several hematological diseases, such as infectious diseases or regenerative anaemia.
-A broader approach will aim at classifying other abnormal cells related to acute leukemia.
-
 ## Data
 
 ### 1. Normal peripheral blood cells
@@ -83,7 +81,7 @@ Image size: 360 x 363 px, naming: <label>_<anonymised id>.jpg
  
  
  #### *PBC_dataset_normal_Raabin*
-A publicly available [dataset](https://raabindata.com/free-data/) around 15,000 images<sup>[3](#footnote3)</sup>. All samples are healthy except for a few basophils imaged from a leukemia patient and come from three laboratories in Iran: Razi Hospital in Rasht, Gholhak Laboratory, Shahr-e-Qods Laboratory and Takht-e Tavous Laboratory in Tehran.
+A publicly available [dataset](https://raabindata.com/free-data/) around 15,000 images<sup>[2](#footnote2)</sup>. All samples are healthy except for a few basophils imaged from a leukemia patient and come from three laboratories in Iran: Razi Hospital in Rasht, Gholhak Laboratory, Shahr-e-Qods Laboratory and Takht-e Tavous Laboratory in Tehran.
  
  5 classes of white blood cells:
 - neutrophils - NE (not include in merged dataset)
@@ -99,7 +97,7 @@ Image size: 300 x 300 px, naming: in class_label_CVB.csv, labels (1- 5) correspo
 
 ### 2.PBS_dataset_AML_Munich
 
-A publicly available [dataset](https://wiki.cancerimagingarchive.net/pages/viewpage.action?pageId=61080958). The data corresponds to 100 patients diagnosed with Acute Myeloid Leukemia at Munich University Hospital between 2014 and 2017, as well as 100 patients without signs of hematological malignancy.<sup>[4](#footnote4)</sup>
+A publicly available [dataset](https://wiki.cancerimagingarchive.net/pages/viewpage.action?pageId=61080958). The data corresponds to 100 patients diagnosed with Acute Myeloid Leukemia at Munich University Hospital between 2014 and 2017, as well as 100 patients without signs of hematological malignancy.<sup>[3](#footnote3)</sup>
 - BAS Basophil
 - EBO Erythroblast
 - EOS Eosinophil
@@ -117,13 +115,10 @@ A publicly available [dataset](https://wiki.cancerimagingarchive.net/pages/viewp
 - PMO Promyelocyte
 
 <a name="footnote1">1.</a> A dataset of microscopic peripheral blood cell images for development of automatic recognition systems. [Data Brief. 2020 Jun; 30: 105474.](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC7182702/)
-
-<a name="footnote2">2.</a> Fast and Robust Segmentation of White Blood Cell Images by Self-supervised Learning. [Micron
-Volume 107, April 2018, Pages 55-71](https://doi.org/10.1016/j.micron.2018.01.010)
  
- <a name="footnote3">3.</a> Raabin-WBC: a large free access dataset of white blood cells from normal peripheral blood. [bioRxiv, 5 (2021))](https://www.biorxiv.org/content/10.1101/2021.05.02.442287v4)
+ <a name="footnote2">2.</a> Raabin-WBC: a large free access dataset of white blood cells from normal peripheral blood. [bioRxiv, 5 (2021))](https://www.biorxiv.org/content/10.1101/2021.05.02.442287v4)
 
-<a name="footnote4">4.</a> Human-level recognition of blast cells in acute myeloid leukaemia with convolutional neural networks. [Nature Machine Intelligence volume 1, pages 538–544 (2019)](https://www.nature.com/articles/s42256-019-0101-9)
+<a name="footnote3">3.</a> Human-level recognition of blast cells in acute myeloid leukaemia with convolutional neural networks. [Nature Machine Intelligence volume 1, pages 538–544 (2019)](https://www.nature.com/articles/s42256-019-0101-9)
  
  
  ### 3.Merged final dataset
@@ -154,24 +149,4 @@ Marie-Anne Mawhin
 Laleh Ravanbod
 
 Yahia Bouzoubaa
- 
-## How to update new packages
 
-### > I want to install new package
-
-```
-cd PROJECT_ROOT_DIRECTORY
-pip install PACKAGE_NAME
-pip-chill > requirements.txt
-git add requirements.txt
-git commit -m "COMMENT"
-git pull
-git push
-```
-### > I want to update packages according to other's changes
-```
-cd PROJECT_ROOT_DIRECTORY
-git pull
-pip install -r requirements.txt
-```
-**Note** The commands in capital letters are placeholders.

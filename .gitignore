@@ -13,3 +13,5 @@
 *.virtual_documents*
 *model_save*
 *.txt
+*.json
+

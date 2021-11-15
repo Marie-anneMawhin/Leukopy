@@ -30,6 +30,10 @@ PAGES = {
 
 def main():
     """Main function of the App"""
+    
+    st.set_page_config(
+        page_title="Leukopy",
+        page_icon="🩸")
 
     st.sidebar.title("Navigation")
     selection = st.sidebar.radio("Go to", list(PAGES.keys()))
