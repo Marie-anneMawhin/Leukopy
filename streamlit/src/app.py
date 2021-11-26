@@ -1,28 +1,26 @@
+import pages.about
+import pages.perspective
+import pages.model
+import pages.EDA
 import streamlit as st
 from importlib import reload
 
 import pages.home
 reload(pages.home)
 
-import pages.EDA
 reload(pages.EDA)
 
-import pages.model
 reload(pages.model)
 
-import pages.perspective
 reload(pages.perspective)
 
-import pages.about
 reload(pages.about)
-
-
 
 
 PAGES = {
     "Home": pages.home,
     "EDA": pages.EDA,
-    "Modélisation": pages.model,
+    "Modelisation": pages.model,
     "Perspectives": pages.perspective,
     "About": pages.about,
 }
@@ -30,7 +28,7 @@ PAGES = {
 
 def main():
     """Main function of the App"""
-    
+
     st.set_page_config(
         page_title="Leukopy",
         page_icon="🩸")
@@ -49,6 +47,7 @@ def main():
         [leukopy](https://github.com/DataScientest/Leukopy).
 """
     )
+
 
 if __name__ == "__main__":
     main()
