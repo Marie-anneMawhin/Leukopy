@@ -15,6 +15,7 @@ import matplotlib.cm as cm
 
 from PIL import Image
 
+from time import time
 
 ## PARAMETERS
 
@@ -28,51 +29,100 @@ vgg19_path = Path("./data/model/vgg19/weights")
 
 #GRAD-CAM :
 
+#@st.cache()    
+#def make_gradmodel(img_array, model, last_conv_layer, class_indexes):
+#    grad_model = tf.keras.models.Model([model.inputs], [last_conv_layer.output, model.output])
+#    with tf.GradientTape() as tape:
+#        last_conv_layer_output, preds = grad_model(img_array)
+#        class_channels = preds[:, class_indexes]
+#    return last_conv_layer_output, class_channels, tape
+
+
+#def make_heatmap_v2(img_array, model, last_conv_layer, class_indexes):
+#
+#    class_indexes = [tf.constant(idx) for idx in class_indexes]
+#    print("Pouet", class_indexes, type(class_indexes[0]))
+#    # Désactive softmax :
+#    model.layers[-1].activation = None
+#    
+#    # Récupère l'output de la dernière couche de convolution du modèle :
+#    t_temp = time()
+#    grad_model = tf.keras.models.Model([model.inputs], [last_conv_layer.output, model.output])
+#    with tf.GradientTape() as tape:
+#        last_conv_layer_output, preds = grad_model(img_array)
+#        class_channels = preds[:, class_indexes]
+#    print("makeheatmap - prediction :",time()-t_temp)
+#    
+#    heatmap_list = []
+#    for idx in range(class_indexes[0]):
+#        t_temp = time()
+#        grads = tape.gradient(class_channels[:,idx], last_conv_layer_output)
+#        pooled_grads = tf.reduce_mean(grads, axis = (0, 1, 2))
+#        print("makeheatmap - tapegradient :", time()-t_temp)
+#    
+#        heatmap_tmp = last_conv_layer_output[0].numpy()
+#
+#        # Multiplie chaque carte d'activation par le gradient, puis moyenne
+#        for i in range(last_conv_layer_output.shape[3]):
+#            heatmap_tmp[:,:,i] *= pooled_grads[i]
+#        heatmap = np.mean(heatmap_tmp, axis=-1)
+#        heatmap_list.append(heatmap)
+#        
+#    # Réactive softmax :
+#    model.layers[-1].activation = tf.keras.activations.softmax
+#    
+#    return heatmap_list
+
 def make_heatmap(img_array, model, last_conv_layer, class_index):
 
+    # Désactive softmax :
+    model.layers[-1].activation = None
+    
+    t_temp = time()
     grad_model = tf.keras.models.Model([model.inputs], [last_conv_layer.output, model.output])
     with tf.GradientTape() as tape:
         last_conv_layer_output, preds = grad_model(img_array)
         class_channel = preds[:, class_index]
-
+    print("makeheatmap - prediction :",time()-t_temp)
+    
+    t_temp = time()
     grads = tape.gradient(class_channel, last_conv_layer_output)
     pooled_grads = tf.reduce_mean(grads, axis = (0, 1, 2))
-
+    print("makeheatmap - tapegradient :", time()-t_temp)
+    
     heatmap_tmp = last_conv_layer_output[0].numpy()
 
     # Multiplie chaque carte d'activation par le gradient, puis moyenne
     for i in range(last_conv_layer_output.shape[3]):
         heatmap_tmp[:,:,i] *= pooled_grads[i]
     heatmap = np.mean(heatmap_tmp, axis=-1)
-
+    
+    # Réactive softmax :
+    model.layers[-1].activation = tf.keras.activations.softmax
+    
     return heatmap
 
 
-def gradcam(model, img, img_orig, 
+def gradcam(model, img, img_orig, last_conv_layer,
             img_height, img_width, class_index, 
             alpha = 0.5):
-    
-    ## Calcul de la Heatmap :
-    # Désactive softmax sur la dernière couche :
-    model.layers[-1].activation = None    
-    # Détecte la dernière couche de convolution du modèle :
-    for layer in reversed(model.layers):
-        if 'conv' in layer.name:
-            last_conv_layer = model.get_layer(layer.name)
-            break
-    # Calcul
+      
     heatmap = make_heatmap(img, model, last_conv_layer, class_index)
-    # Réactive softmax :
-    model.layers[-1].activation = tf.keras.activations.softmax
+    
+    return heatmap
 
 
-    ## Traitement de la Heatmap :
-    # Applique ReLu (élimine les valeurs négatives de la heatmap)
+def print_gradcam(heatmap, img_orig, alpha = 0.8):
+    """
+    Traitement de la heatmap produite par make_heatmap :
+        - applique ReLU
+        - normalise
+        - superpose la heatmap à l'image d'origine
+    """
+
     heatmap = np.maximum(0, heatmap)
-    # Normalisation
     heatmap = heatmap/heatmap.max()
-    
-    
+
     ## Superposition de l'image "img_orig" et de la heatmap
     # 1/ Rescale heatmap: 0-255
     heatmap = np.uint8(255*heatmap)
@@ -88,7 +138,6 @@ def gradcam(model, img, img_orig,
     # 6/ Superimpose the heatmap on original image
     superimposed_img = jet_heatmap*alpha + img_orig
     superimposed_img = tf.keras.preprocessing.image.array_to_img(superimposed_img)
-
     return superimposed_img
 
 # Load model :
@@ -97,7 +146,6 @@ def load_model():
     model = tf.keras.models.load_model(vgg19_path)
     model.summary()
     return model
-
 
 # Image Preprocessing :
 def get_img_array(img_file, size = (img_height, img_width), preprocess = True):
@@ -114,23 +162,6 @@ def get_img_array(img_file, size = (img_height, img_width), preprocess = True):
         img = preprocess_input(img)
     return img
 
-#def get_img_array_2(img_file, size = (img_height, img_width), preprocess = True):
-#    df_user = pd.DataFrame({"img_path":,"label":None})
-#    user_generator = ImageDataGenerator()
-#    user_set = user_generator.flow(df_user,
-#                                                  x_col='img_path', 
-#                                                  y_col='label',
-#                                                  target_size=(img_height, img_width), 
-#                                                  color_mode='rgb',
-#                                                  classes=None, 
-#                                                  class_mode=None, 
-#                                                  batch_size=batch_size, 
-#                                                  shuffle=False,
-#                                                  preprocessing_function=preprocess_input)
-
-#    img_array = tf.convert_to_tensor(user_set.__getitem__(0))
-#    return img_array
-
 @st.cache()
 def preprocessing(img_file, size = (img_height, img_width)):
     img = get_img_array(img_file, size = (img_height, img_width))
@@ -139,37 +170,64 @@ def preprocessing(img_file, size = (img_height, img_width)):
 
 
 # Main function
+def print_proba(proba):
+    if proba < 0.0001:
+        return str('< 0.01%')
+    
+    return str(np.round(proba*100, 2))+'%'
+
 def vgg19_prediction(model,img_file):
+    
     # Preprocessing de l'image
     img, img_orig = preprocessing(img_file, size = (img_height, img_width))
-    #img = get_img_array(img_file, size = (img_height, img_width))
-    #img_orig = get_img_array(img_file, size = (img_height, img_width), preprocess = False)
-    
+
     # Prediction :
     preds = model.predict(img)[0]
+    
     sorted_indexes = np.flip(np.argsort(preds))
     sorted_preds = [preds[i] for i in sorted_indexes]
     sorted_classes = [classes[i] for i in sorted_indexes]
     
-    print(preds)
-    print(sorted_classes)
-
+    print("Sorted Indexes :",sorted_indexes[:3])
+    print("Shape :", len(sorted_indexes[:3]))
+    print("Type :", type(sorted_indexes[:3]))
+    
+    # Détecte la dernière couche de convolution du modèle :
+    for layer in reversed(model.layers):
+        if 'conv' in layer.name:
+            last_conv_layer = model.get_layer(layer.name)
+            break
+    
+#    # Test :
+#    heatmaps = make_heatmap_v2(img, model, last_conv_layer, sorted_indexes[:3])
+#    
+#    fig = plt.figure(figsize = (8,8))
+#    for i, heatmap in enumerate(heatmaps):
+#        superimposed_img = print_gradcam(heatmap, img_orig, alpha = 0.8)
+#        ax = fig.add_subplot(2,2,i+1)
+#        ax.imshow(superimposed_img)
+#        ax.set_title(sorted_classes[i] +' (%s)'%(print_proba(sorted_preds[i])), fontsize = 14)
+#        plt.grid(None)
+#        plt.axis('off')       
+    
     # Grad-CAM : plot the 3 most probable classes :
     fig = plt.figure(figsize = (8,8))
     
     for i, id in enumerate(sorted_indexes[:3]):    
-
-        superimposed_img = gradcam(model, img, img_orig, 
-                                   img_height, img_width, 
-                                   class_index = id, alpha = 0.8)
+        # Calcul de la heatmap:
+        t_temp = time()
+        heatmap = gradcam(model, img, img_orig, last_conv_layer,
+                          img_height, img_width, 
+                          class_index = id, alpha = 0.8)
+        print("GradCAM Time :", time()-t_temp)
+        
+        # Traitement de la heatmap:
+        superimposed_img = print_gradcam(heatmap, img_orig, alpha = 0.8)
         
         ax = fig.add_subplot(2,2,i+1)
         ax.imshow(superimposed_img)
-        ax.set_title(sorted_classes[i] +' (%s)'%(str(sorted_preds[i]*100)[:4]+'%'), fontsize = 14)
-        #ax.text(x = 10, y = 30, s = 'P(%s) = %s'%(sorted_classes[i], str(sorted_preds[i]*100)[:4]+'%'), fontsize = 14)
-        
+        ax.set_title(sorted_classes[i] +' (%s)'%(print_proba(sorted_preds[i])), fontsize = 14)
         plt.grid(None)
         plt.axis('off')
 
-        
     return fig
