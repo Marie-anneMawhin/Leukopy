@@ -1,15 +1,15 @@
 import streamlit as st
 
+
 def write():
     st.title("Leukopy 🩸 - blood cell classifier")
 
     st.markdown("""
     ## Context
     The identification and classification of leukocytes, platelets and erythrocytes 
-    is crucial in the **diagnosis** of several hematological diseases, 
-    such as infectious diseases or leukemia.
+    is crucial in the **diagnosis** of several haematological diseases, 
+    such as infectious diseases or leukaemia.
     """)
-
 
     col1, col2 = st.columns([3, 1])
     with col1:
@@ -21,7 +21,6 @@ def write():
 
     with col2:
         st.image('src/data/images/Blood-smear-prep_HEADER.png')
-
 
     st.markdown("""
         ## Problematic
@@ -38,20 +37,18 @@ def write():
         segmentation, component separation, feature extraction, and 
         classification of white blood cells by shallow machine learning models.
         """)
-    
+
     st.markdown("""
     This type of systems do not **generalise** well, in particular because of the 
-    variability of Romanowsky colorations and acquisition systems along with the significant
+    variability of Romanowsky staining and acquisition systems along with the significant
     requirements of its design in terms of pre-processing and feature extraction.
     """)
-    
 
     st.markdown(""" ## Aim 
     <p style='font-size: 22px;'> The main objective of this study is to develop 
     a <b>deep neural network</b> capable of classifying healthy blood cells
      into 8 or 11 classes.
-     </p> """
-    , unsafe_allow_html=True)
+     </p> """, unsafe_allow_html=True)
 
     st.markdown("""
     ### _Description of cell types_
@@ -66,21 +63,19 @@ def write():
     - immature (metamyelocytes, myelocytes, promyelocytes) and band neutrophils - IG or separated - MMY, - MY, - PMY, and - BNE
 
     """
-    )
-
+                )
 
     hemato = open('src/data/images/hemato.mp4', 'rb')
     hemato_bytes = hemato.read()
     st.video(hemato_bytes)
 
-
     st.markdown(""" 
     ##
     Each cells shows different characteristics such as:
-    - the color of their granules (pink/orange, purple, lilac)
+    - the colour of their granules (pink/orange, purple, lilac)
     - the number of nuclear lobes
     - the shape of the nucleus
-    - the color of cytoplasm ...
+    - the colour of cytoplasm ...
 
 
     ## Data
@@ -92,12 +87,12 @@ def write():
     
     #### 2.PBC_dataset_normal_Raabin
     A publicly available [dataset](https://raabindata.com/free-data/) around 15,000 images. 
-    All samples are healthy except for a few basophils imaged from a leukemia patient and come from three laboratories in Iran: 
+    All samples are healthy except for a few basophils imaged from a leukaemia patient and come from three laboratories in Iran: 
     Razi Hospital in Rasht, Gholhak Laboratory, Shahr-e-Qods Laboratory and Takht-e Tavous Laboratory in Tehran.<sup>[2](#footnote2)</sup>
     
     #### 3.PBS_dataset_AML_Munich
     A publicly available [dataset](https://wiki.cancerimagingarchive.net/pages/viewpage.action?pageId=61080958). The data corresponds to 100 patients diagnosed 
-    with Acute Myeloid Leukemia at Munich University Hospital between 2014 and 2017, as well as 100 patients without signs of hematological malignancy.<sup>[3](#footnote3)</sup>
+    with Acute Myeloid Leukemia at Munich University Hospital between 2014 and 2017, as well as 100 patients without signs of haematological malignancy.<sup>[3](#footnote3)</sup>
     
 
 
