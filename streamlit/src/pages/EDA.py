@@ -2,13 +2,13 @@ import streamlit as st
 import pandas as pd
 import numpy as np
 import plotly.express as px
-from traitlets.traitlets import default
 
 
 def write():
+
     st.title('EDA')
 
-    df = pd.read_csv('src/data/df/PBC_dataset_normal_df_merged.csv')
+    df = pd.read_csv('df/PBC_dataset_normal_df_merged.csv')
 
     with st.expander('show dataframe'):
 
@@ -69,7 +69,7 @@ def write():
     lumi = st.container()
     lumi.markdown('# Luminosity')
 
-    lumi.image('src/data/images/plot_ramdom_cells.jpg',
+    lumi.image('images/plot_ramdom_cells.jpg',
                caption='Plot showing random cells for each label and dataset of origin.')
 
     lumi.markdown(
@@ -92,7 +92,7 @@ def write():
     Moreover, the origin of the dataset explains partly how data are clustered.
     ''')
 
-    df_umap = pd.read_csv('src/data/df/UMAP.csv')
+    df_umap = pd.read_csv('df/UMAP.csv')
 
     choice_umap = umap_c.multiselect('Select the dataset of origin',
                                      options=df_umap.origin.unique(),

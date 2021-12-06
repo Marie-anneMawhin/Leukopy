@@ -14,9 +14,7 @@
 *model_save*
 *.txt
 *.json
-*.pb
-*.index
 *history*
-*variables.data*
 *.~lock*
 notebooks/model/ViT/results*
+notebooks/model/vgg19/vgg19*
