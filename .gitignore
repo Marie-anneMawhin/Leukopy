@@ -18,4 +18,4 @@
 *.~lock*
 notebooks/model/ViT/results*
 notebooks/model/vgg19/vgg19*
-#streamlit/src/data/model*
+streamlit/src/data/model*
