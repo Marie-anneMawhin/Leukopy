@@ -1,6 +1,7 @@
 import pages.about
 import pages.perspective
 import pages.model
+import pages.analysis
 import pages.EDA
 import streamlit as st
 from importlib import reload
@@ -12,6 +13,8 @@ reload(pages.EDA)
 
 reload(pages.model)
 
+reload(pages.analysis)
+
 reload(pages.perspective)
 
 reload(pages.about)
@@ -20,6 +23,7 @@ reload(pages.about)
 PAGES = {
     "Home": pages.home,
     "EDA": pages.EDA,
+    "Analyse": pages.analysis,
     "Examples": pages.model,
     "Perspectives": pages.perspective,
     "About": pages.about,
