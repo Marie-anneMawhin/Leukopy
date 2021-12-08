@@ -27,51 +27,7 @@ label_map = {'BA': 0, 'BNE': 1, 'EO': 2, 'ERB': 3, 'LY': 4, 'MMY': 5, 'MO': 6, '
 
 vgg19_path = Path("./data/model/vgg19/weights")
 
-#GRAD-CAM :
 
-#@st.cache()    
-#def make_gradmodel(img_array, model, last_conv_layer, class_indexes):
-#    grad_model = tf.keras.models.Model([model.inputs], [last_conv_layer.output, model.output])
-#    with tf.GradientTape() as tape:
-#        last_conv_layer_output, preds = grad_model(img_array)
-#        class_channels = preds[:, class_indexes]
-#    return last_conv_layer_output, class_channels, tape
-
-
-#def make_heatmap_v2(img_array, model, last_conv_layer, class_indexes):
-#
-#    class_indexes = [tf.constant(idx) for idx in class_indexes]
-#    print("Pouet", class_indexes, type(class_indexes[0]))
-#    # Désactive softmax :
-#    model.layers[-1].activation = None
-#    
-#    # Récupère l'output de la dernière couche de convolution du modèle :
-#    t_temp = time()
-#    grad_model = tf.keras.models.Model([model.inputs], [last_conv_layer.output, model.output])
-#    with tf.GradientTape() as tape:
-#        last_conv_layer_output, preds = grad_model(img_array)
-#        class_channels = preds[:, class_indexes]
-#    print("makeheatmap - prediction :",time()-t_temp)
-#    
-#    heatmap_list = []
-#    for idx in range(class_indexes[0]):
-#        t_temp = time()
-#        grads = tape.gradient(class_channels[:,idx], last_conv_layer_output)
-#        pooled_grads = tf.reduce_mean(grads, axis = (0, 1, 2))
-#        print("makeheatmap - tapegradient :", time()-t_temp)
-#    
-#        heatmap_tmp = last_conv_layer_output[0].numpy()
-#
-#        # Multiplie chaque carte d'activation par le gradient, puis moyenne
-#        for i in range(last_conv_layer_output.shape[3]):
-#            heatmap_tmp[:,:,i] *= pooled_grads[i]
-#        heatmap = np.mean(heatmap_tmp, axis=-1)
-#        heatmap_list.append(heatmap)
-#        
-#    # Réactive softmax :
-#    model.layers[-1].activation = tf.keras.activations.softmax
-#    
-#    return heatmap_list
 
 def make_heatmap(img_array, model, last_conv_layer, class_index):
 
@@ -196,38 +152,25 @@ def vgg19_prediction(model,img_file):
     for layer in reversed(model.layers):
         if 'conv' in layer.name:
             last_conv_layer = model.get_layer(layer.name)
-            break
+            break     
     
-#    # Test :
-#    heatmaps = make_heatmap_v2(img, model, last_conv_layer, sorted_indexes[:3])
-#    
-#    fig = plt.figure(figsize = (8,8))
-#    for i, heatmap in enumerate(heatmaps):
-#        superimposed_img = print_gradcam(heatmap, img_orig, alpha = 0.8)
-#        ax = fig.add_subplot(2,2,i+1)
-#        ax.imshow(superimposed_img)
-#        ax.set_title(sorted_classes[i] +' (%s)'%(print_proba(sorted_preds[i])), fontsize = 14)
-#        plt.grid(None)
-#        plt.axis('off')       
+    # Grad-CAM :
+    fig = plt.figure(figsize = (5,5))
+       
+    ## Calcul de la heatmap:
+    heatmap = gradcam(model, img, img_orig, last_conv_layer,
+                      img_height, img_width, 
+                      class_index = sorted_indexes[0], alpha = 0.8)
+    ## Traitement de la heatmap:
+    superimposed_img = print_gradcam(heatmap, img_orig, alpha = 0.8)
     
-    # Grad-CAM : plot the 3 most probable classes :
-    fig = plt.figure(figsize = (8,8))
-    
-    for i, id in enumerate(sorted_indexes[:3]):    
-        # Calcul de la heatmap:
-        t_temp = time()
-        heatmap = gradcam(model, img, img_orig, last_conv_layer,
-                          img_height, img_width, 
-                          class_index = id, alpha = 0.8)
-        print("GradCAM Time :", time()-t_temp)
-        
-        # Traitement de la heatmap:
-        superimposed_img = print_gradcam(heatmap, img_orig, alpha = 0.8)
-        
-        ax = fig.add_subplot(2,2,i+1)
-        ax.imshow(superimposed_img)
-        ax.set_title(sorted_classes[i] +' (%s)'%(print_proba(sorted_preds[i])), fontsize = 14)
-        plt.grid(None)
-        plt.axis('off')
+    ## Plot
+    plt.imshow(superimposed_img)
+    #plt.title(sorted_classes[0] +' (%s)'%(print_proba(sorted_preds[0])), fontsize = 14)
+    #plt.text(x = 10, y = 25, s = 'P(%s) = %s'%(sorted_classes[0], print_proba(sorted_preds[0])), fontsize = 'xx-large')
+    #plt.text(x = 10, y = 55, s = 'P(%s) = %s'%(sorted_classes[1], print_proba(sorted_preds[1])), fontsize = 'xx-large')
+    #plt.text(x = 10, y = 85, s = 'P(%s) = %s'%(sorted_classes[2], print_proba(sorted_preds[2])), fontsize = 'xx-large')
+    plt.grid(None)
+    plt.axis('off')
 
-    return fig
+    return fig, sorted_classes, sorted_preds
