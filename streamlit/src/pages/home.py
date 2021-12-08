@@ -21,7 +21,7 @@ def write():
         """)
 
     with col2:
-        st.image('images/Blood-smear-prep_HEADER.png')
+        st.image('./data/images/Blood-smear-prep_HEADER.png')
 
     st.markdown("""
         ## Problematic
@@ -30,7 +30,7 @@ def write():
         """)
     col1, col2 = st.columns([3, 1])
     with col1:
-        st.image('images/segmentation.png')
+        st.image('./data/images/segmentation.png')
 
     with col2:
         st.markdown("""
@@ -66,7 +66,7 @@ def write():
     """
                 )
 
-    hemato = open('images/hemato.mp4', 'rb')
+    hemato = open('./data/images/hemato.mp4', 'rb')
     hemato_bytes = hemato.read()
     st.video(hemato_bytes)
 

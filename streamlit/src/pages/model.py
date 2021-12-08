@@ -2,7 +2,7 @@ import streamlit as st
 
 from importlib import reload
 
-import data.model.vgg19.utils.vgg19_utils as vgg19_utils
+import utils.models.vgg19_utils as vgg19_utils
 reload(vgg19_utils)
 
 
