@@ -20,7 +20,7 @@ reload(pages.about)
 PAGES = {
     "Home": pages.home,
     "EDA": pages.EDA,
-    "Modelisation": pages.model,
+    "Examples": pages.model,
     "Perspectives": pages.perspective,
     "About": pages.about,
 }

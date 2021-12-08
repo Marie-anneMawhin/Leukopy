@@ -10,7 +10,7 @@ model_list = ["VGG16", "VGG19", "ViT-b16"]
 
 
 def write():
-    st.subheader('Classification')
+    st.subheader('Examples :')
 
     model_choice = st.selectbox("Select model", options=model_list)
 
