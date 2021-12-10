@@ -1,4 +1,7 @@
 import streamlit as st
+import pandas as pd
+import numpy as np
+import plotly.express as px
 
 def write():
     
@@ -11,18 +14,83 @@ def write():
     cont_1 = st.container()
     cont_1.subheader("What does the confusion matrix reveal ?")
     
-    with cont_1.expander('Charts'):
-        st.image('./data/images/vgg19/vgg19_confuse.png')
+    cont_1.markdown('''**Out of diagonal values in the confusion matrix** represent percentages of misclassified pictures.
+                    For example, 20.4% of the MMY have been confused with MY. The **strongest values have been circled in red**
+                    on the matrix below.''')
+                    
+    with cont_1.expander('Confusion matrix'):
+        st.image('./data/images/vgg19/vgg19_confuse_red.png')
+        
+    cont_1.markdown('''Our model performs well on many classes, 
+                    **except for a few pathological cases we are going to discuss now** : 
+                    these quite remarkable errors relate to the **neutrophilic granulocytes and their precursors**. To understand why,
+                    we need to invoke biology :''')
+                    
+    with cont_1.expander('The life of a neutrophilic granulocyte ...'):             
+        st.image('./data/images/vgg19/granulocytes.png')
+        
+    
+    cont_1.markdown('''PMY, MY, MMY, BNE and SNE are steps in the neutrophilic granulocyte **growth process**. 
+                    This process is **a continuous one**, so it is believable we find some cells between two successive archetypes. The model
+                    must choose a class whereas a cell could share features from two successive steps, then we get classification errors.''')
+        
+    cont_1.markdown('''But we could also **invert the viewpoint** and invoke another explanation : possible **labeling errors**. 
+                    For example, we show four pictures from the Barcelona dataset :''')
+    
+    with cont_1.expander('Some disturbing cases ...'):
+        st.image('./data/images/vgg19/confusions.png', caption = 'From left to right : PMY, two MMY and a BNE.')
+        
+        st.markdown('''The two left pictures share noticeable features (e.g. same nucleus "bean" shape, cytoplasmic granulations), 
+                    and we could say the same for the two right pictures (C-shaped nucleus). The third picture could be a 
+                    "young" BNE, or an "old" MMY because of nucleus shape.
+                    Labeling such pictures is a complex work, and requires well trained
+                    experts which are not unerring.''')
+
+    cont_1.markdown('''These two reasons could explain why the model performs 
+                    so bad on neutrophilic granulocytes (especially MMY and MY) 
+                    whereas we obtain F1-scores greater than 95% on all the other classes.''')
     
     ## Généralisation
     cont_2 = st.container()
     cont_2.subheader("About the ability to generalise")
     
-    with cont_2.expander('Charts'):
-        # Discuter les métriques en fonction de l'origine des images : biais + importance de Raabin
-        st.image('./data/images/vgg19/well_classified_stats.png')
+    cont_2.markdown("""The table below contains percentage of correctly classified pictures for each class and for each dataset 
+                    (Barcelona, Munich, Raabin). We highlight in yellow classes for which we have Raabin data.""")
+          
+    # Accuracy per class and dataset
+    cont_2.image('./data/images/vgg19/well_classified_stats.png')
 
+    # Populations
+    df = pd.read_csv('./data/df/PBC_dataset_normal_df_merged.csv')
 
+    cont_2.markdown('''
+    The following plot shows the count of cells per classes.
+    ''')
+    fig_distrib = px.histogram(df, x='label',
+                               template='none',
+                               color='origin',
+                               color_discrete_sequence=[
+                                   '#4C78A8',  '#E45756', '#72B7B2'])
+    cont_2.plotly_chart(fig_distrib)
+    
+    cont_2.markdown('''Data from Munich and Barcelona look good : bright and clear pictures, 
+                    but lack of variety. **Raabin data are more diverse, 
+                    which is good for our model ability to generalise** : we obtain good metrics when we 
+                    have Raabin data, even for BA (a minority class).''')
+                     
+    cont_2.markdown('''We **reveal a bias** when considering BNE (Barcelona dominant) and SNE (Munich dominant) : BNE from Munich and
+    SNE from Barcelona obtain **a meager 60%**. The **source imbalance has a visible effect**, and **the lack of 
+    Raabin data to enrich the model implies it may not be able to generalise well on these classes** despite global 
+    **SNE F1-Score greater than 95%** and despite **SNE are the dominant class in most of the avalaible datasets**.
+    ''')
+                    
+    cont_2.markdown('''This emphasizes the **necessity of collect data from different institutions** in order to make diverse datasets.''')
+    
+    cont_2.markdown('''Good performances obtained on BA, or ERB or MO implies 
+                    the required global amount of data for each class is not too high.
+                    **We need diversity, probably not high numbers**.
+                    ''')                  
+    
     ## Grad-CAM
     cont_3 = st.container()
     cont_3.subheader("Grad-CAM")
