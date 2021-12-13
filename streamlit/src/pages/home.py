@@ -1,4 +1,7 @@
 import streamlit as st
+from importlib import reload
+import utils.common as common
+reload(common)
 
 
 def write():
@@ -66,9 +69,10 @@ def write():
     """
                 )
 
-    hemato = open('./data/images/hemato.mp4', 'rb')
-    hemato_bytes = hemato.read()
-    st.video(hemato_bytes)
+    hemato = st.container()
+    common.display_md_gif(path="./data/images/hemato.gif",
+                          container=hemato,
+                          alt_text='hemato gif')
 
     st.markdown(""" 
     ##
