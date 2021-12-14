@@ -3,10 +3,11 @@ import streamlit as st
 from importlib import reload
 
 import utils.models.vgg19_utils as vgg19_utils
+import utils.models.vgg16_utils as vgg16_utils
 reload(vgg19_utils)
 
 
-model_list = ["VGG16", "VGG19", "ViT-b16"]
+model_list = ["VGG16+SVM", "VGG19", "ViT-b16"]
 
 
 def write():
@@ -57,7 +58,33 @@ def write():
                     st.subheader('Grad-CAM for %s:' % (sorted_classes[0]))
                     st.pyplot(fig)
 
-                # if normalize_case2:
+                if model_choice == "VGG16+SVM":
+                    # Choix du modèle
+                    model_flag = vgg16_utils.choose_model(img_file)
+                    
+                    if model_flag == "VGG16_SVM_6_C_SF_flag":
+                        base_model, str_result, img = vgg16_utils.VGG16_SVM_6_C_SF(img_file)
+                        st.write(str_result)
+                                     
+                    if model_flag == "VGG16_SVM_6_C_AF_flag":
+                        base_model, str_result,img = vgg16_utils.VGG16_SVM_6_C_AF(img_file)
+                        st.write(str_result) 
+                        
+                    if model_flag == "VGG16_SVM_8_C_AF_flag":
+                        base_model, str_result,img = vgg16_utils.VGG16_SVM_8_C_AF(img_file)
+                        st.write(str_result)
+                        
+                    if model_flag == "VGG16_SVM_8_C_SF_flag":
+                        base_model, str_result,img = vgg16_utils.VGG16_SVM_8_C_SF(img_file)
+                        st.write(str_result)   
+
+                    big_heatmap, superimposed_img = vgg16_utils.gradcam(base_model, img, img_file, alpha = 0.8, plot = False)  
+                    st.image(superimposed_img,width=150)
+                
+                # if model_choice == "ViT-b16":
+                #     pass
+                # if normalize_case3:
+                #     pass
                 #     pass
                 # if normalize_case3:
                 #     pass

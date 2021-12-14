@@ -1,17 +1,18 @@
 import streamlit as st
 
+from PIL import Image
 from importlib import reload
+
 import utils.common as common
 reload(common)
 
-model_list = ["VGG16", "VGG19", "ViT-b16"]
+model_list = ["VGG16+SVM", "VGG19", "ViT-b16"]
 
 
 def write():
     st.title("Modelisation")
 
     # Model structure and methodology
-
     cont_1 = st.container()
 
     cont_1.markdown("""
@@ -27,9 +28,19 @@ def write():
 
     model_choice = st.selectbox("Select a model", options=model_list)
 
-    if model_choice == "VGG16":
-        pass
+    # VGG16 + SVM
+    if model_choice == "VGG16+SVM":
+        
+        cont_2 = st.container()
+        cont_2.image('./data/images/vgg16svm/modeles.png')
+        
+        cont_3 = st.container()
+        cont_3.image('./data/images/vgg16svm/filtre.png')
+        
+        cont_4 = st.container()
+        cont_4.image('./data/images/vgg16svm/algorithmes.png')
 
+    # VGG19
     if model_choice == "VGG19":
 
         # Preprocessing
@@ -93,6 +104,7 @@ def write():
         with cont_3.expander('Chart'):
             st.image('./data/images/vgg19/vgg19_confuse.png')
 
+    # ViT-b16
     if model_choice == "ViT-b16":
 
         # Preprocessing

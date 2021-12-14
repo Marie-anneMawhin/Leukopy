@@ -1,6 +1,7 @@
 import streamlit as st
 
 import tensorflow as tf
+from tensorflow.keras.models import Model
 from tensorflow.keras.applications.vgg19 import preprocess_input
 from tensorflow.keras.preprocessing.image import ImageDataGenerator
 
