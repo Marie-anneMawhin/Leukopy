@@ -10,6 +10,4 @@ def write():
 
     Marie-Anne Mawhin
 
-    Laleh Ravanbod
-
-    Yahia Bouzoubaa """)
+    Laleh Ravanbod""")

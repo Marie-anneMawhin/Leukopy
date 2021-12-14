@@ -10,32 +10,41 @@ def write():
                 we have seen that **good global metrics can hide important problems**, e.g. with 
                 the model ability to generalise and correctly predict the nature of a previously unseen cell.""")
 
+    col1, col2 = st.columns([1,3])
+    with col2 :
     # Lack of data and consequences
-    st.markdown("""Our biggest problem is the **lack of diverse and accurately labelled data** : """)
+        st.markdown("""Our biggest problem is the **lack of diverse and accurately labelled data** : """)
                 
-    st.markdown("""- more **diverse and labelled pictures**, 
+        st.markdown("""- more **diverse and labelled pictures**, 
                 i.e. coming from other institutions (different acquisition systems, different stainings, luminosity etc...)
                 will **allow for a more balanced dataset** (less SNE, and LY, **more immatures**) and a **better ability for 
                 the model to generalise on new data**;""")
     
-    st.markdown(""" - **then, we could develop data augmentation** : 
+        st.markdown(""" - **then, we could develop data augmentation** : 
                 for example we could try to mimic real-life histology stainings, 
                 alter actual stainings or use GANs (Generative Adversarial Networks) 
                 to produce new pictures;""")
                 
-    st.markdown(""" - finally, we could consider **a complete training of
-                our models** on blood cells pictures (and therefore discard ImageNet weights);""")
+        st.markdown(""" - finally, we could consider **a complete training of our models** on 
+                    blood cells pictures (and therefore discard ImageNet weights);""")
     
-    st.markdown("""</br>
+        st.markdown("""</br>
                 </br>""", unsafe_allow_html=True)
-                
-    st.markdown("""In order to help with **cancer diagnosis**, we must improve the ability of 
-                the model to **recognise immature cells** : PMY and MMY for example, 
-                but also **myeloblasts** (absent of our model because of lack of data), or lymphocytes precursors (see below).
-                About the lymphocytes, we consider them as a unique class, 
-                whereas there are at least three : B, T and NK.""")
-                
-    st.image('./data/images/lymphocytes_growth.png')
+       
+    with col1:
+        st.image('./data/images/augmentation.png')
+        
+    col3, col4 = st.columns(2)
+    with col3:
+        st.markdown("""In order to help with **cancer diagnosis**, we must improve the ability of 
+                    the model to **recognise immature cells** : PMY and MMY for example, 
+                    but also **myeloblasts** (absent of our model because of lack of data), 
+                    or lymphocytes precursors.""")
+                    
+        st.markdown('''We consider lymphocytes (LY) them as a unique class, 
+                    whereas there are at least three : B, T and NK.''')
+    with col4: 
+        st.image('./data/images/lymphocytes_growth.png', width = 200)
        
     
     # Data labelling cross-validation
@@ -49,16 +58,16 @@ def write():
                 or semi-supervised learning** are possibly more reasonable alternatives. """)    
     
     # Object detection
-    col1, col2 = st.columns(2)
-    with col1:
-        st.markdown(""" We have only worked **on one step of the full process** : 
-                    we use segmented pictures, with only one cell at 
-                    the center. 
-                    **A possible extension of this work could involve 
-                    object (= blood cell) detection** (e.g. with YoloV5) on a large scale picture of 
-                    a blood smear, in order to produce ourselves the kind of pictures we use 
-                    in this app;""")
-    with col2:
+    col5, col6 = st.columns(2)
+    with col5:
         st.image('./data/images/Im016_1.jpg', width = 300)
     
+    with col6:
+        st.image('./data/images/bbox.png')
 
+    st.markdown(""" We have only worked **on one step of the full process** : 
+                we use segmented pictures, with only one cell at the center. 
+                **A possible extension of this work could involve 
+                object (= blood cell) detection** (e.g. with YoloV5) on a large scale picture of 
+                a blood smear, in order to produce ourselves the kind of pictures we use 
+                in this app;""")

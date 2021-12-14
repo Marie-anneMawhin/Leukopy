@@ -14,16 +14,13 @@ def write():
     cont_1 = st.container()
     cont_1.subheader("What does the confusion matrix reveal ?")
     
-    cont_1.markdown('''**Out of diagonal values in the confusion matrix** represent percentages of misclassified pictures.
-                    For example, 20.4% of the MMY have been confused with MY. The **strongest values have been circled in red**
-                    on the matrix below.''')
+    cont_1.markdown('''The **strongest percentages of misclassified pictures have been circled in red** on the matrix below.''')
                     
     with cont_1.expander('Confusion matrix'):
-        st.image('./data/images/vgg19/vgg19_confuse_red.png')
+        st.image('./data/images/vgg19/vgg19_confuse_red.png', width = 500)
         
-    cont_1.markdown('''Our model performs well on many classes, 
-                    **except for a few pathological cases we are going to discuss now** : 
-                    these quite remarkable errors relate to the **neutrophilic granulocytes and their precursors**. To understand why,
+    cont_1.markdown('''We remark **some pathological cases we are going to discuss now** : 
+                    the **neutrophilic granulocytes and their precursors**. To understand why,
                     we need to invoke biology :''')
                     
     with cont_1.expander('The life of a neutrophilic granulocyte ...'):             
@@ -31,11 +28,13 @@ def write():
         
     
     cont_1.markdown('''PMY, MY, MMY, BNE and SNE are steps in the neutrophilic granulocyte **growth process**. 
-                    This process is **a continuous one**, so it is believable we find some cells between two successive archetypes. The model
-                    must choose a class whereas a cell could share features from two successive steps, then we get classification errors.''')
+                    This process is **a continuous one** (e.g. the nucleus slowly evolve from a potato shape to a multi-lobed one), 
+                    so it is believable we find some cells with features of two successive growth steps.''') 
+                    
+    cont_1.markdown('''The model must choose a class, then we can get classification errors. 
+                    **A possible solution : display the probabilities for the most probable classes !**''')
         
-    cont_1.markdown('''But we could also **invert the viewpoint** and invoke another explanation : possible **labeling errors**. 
-                    For example, we show four pictures from the Barcelona dataset :''')
+    cont_1.markdown('''We could also **invert the viewpoint** and invoke possible **labeling errors** (pictures below) :''')
     
     with cont_1.expander('Some disturbing cases ...'):
         st.image('./data/images/vgg19/confusions.png', caption = 'From left to right : PMY, two MMY and a BNE.')
@@ -47,8 +46,7 @@ def write():
                     experts which are not unerring.''')
 
     cont_1.markdown('''These two reasons could explain why the model performs 
-                    so bad on neutrophilic granulocytes (especially MMY and MY) 
-                    whereas we obtain F1-scores greater than 95% on all the other classes.''')
+                    so bad **only** on neutrophilic granulocytes (especially MMY and MY).''')
     
     ## Généralisation
     cont_2 = st.container()
