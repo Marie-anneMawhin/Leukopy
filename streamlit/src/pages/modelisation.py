@@ -43,42 +43,44 @@ def write():
     # VGG19
     if model_choice == "VGG19":
 
-        # Preprocessing
+        # Architecture
         cont_2 = st.container()
-        cont_2.subheader("""Preprocessing""")
 
-        cont_2.markdown("""The data flow through this pipeline during training.
+        cont_2.subheader("""Model architecture""")
+
+        cont_2.markdown(
+            """We replace the original VGG19 top layers with our own custom classification block:""")
+        cont_2.image('./data/images/vgg19/vgg19_structure.png')
+        
+        cont_2.markdown("""
+        To train this model, we adopt a **two-stage approach**:
+        - **transfer learning from ImageNet** for VGG19: we only train the classification block layers,
+        - **fine-tuning of the 'block5'**.
+        """)
+
+        # Preprocessing
+        cont_3 = st.container()
+        cont_3.subheader("""Preprocessing""")
+
+        cont_3.markdown("""The data flow through this pipeline during training.
                         The same steps (except data augmentation) are applied to the test data.""")
 
         """### display gif from local file in markdown"""
         common.display_md_gif(path="./data/images/vgg19/preprocessing_1750_50.gif",
                               container=cont_2,
                               alt_text='vgg19 preprocessing gif')
-        cont_2.markdown('''''')
+        cont_3.markdown('''''')
 
         # Results
-        cont_3 = st.container()
+        cont_4 = st.container()
+        cont_4.subheader("""Main results""")
 
-        cont_3.markdown("""
-            To train this model, we adopt a **two-stage approach**:
-            - **transfer learning from ImageNet** for VGG19: we only train the classification block layers,
-            - **fine-tuning of the 'block5'**.
-            """)
-
-        cont_3.subheader("""Model architecture""")
-
-        cont_3.markdown(
-            """We replace the original VGG19 top layers with our own custom classification block:""")
-        cont_3.image('./data/images/vgg19/vgg19_structure.png')
-
-        cont_3.subheader("""Main results""")
-
-        cont_3.markdown('''
+        cont_4.markdown('''
                         - ###### Loss and global accuracy:
         ''')
-        cont_3.markdown(
+        cont_4.markdown(
             ''' Global accuracy on training data: 95%. Global **accuracy on test** and validation data: **94%** ''')
-        with cont_3.expander('Chart'):
+        with cont_4.expander('Chart'):
             st.image('./data/images/vgg19/vgg19_training.png')
 
             st.markdown(''' There is no overfitting.
@@ -86,22 +88,22 @@ def write():
                         because of dropout layers, data augmentation and class
                         weights used during the training.''')
 
-        cont_3.markdown('''
+        cont_4.markdown('''
                         - ###### Classification report:
         ''')
-        cont_3.markdown('''
+        cont_4.markdown('''
         F1-Scores greater than 95% for all classes **except for: PMY, MY, MMY and BNE**.
         ''')
-        with cont_3.expander('Table'):
+        with cont_4.expander('Table'):
             st.image('./data/images/vgg19/vgg19_report.png')
 
-        cont_3.markdown('''
+        cont_4.markdown('''
                         - ###### Confusion matrix:  
         
         The model is **muddling up the different kind of neutrophils** (mature and immature).
         ''')
 
-        with cont_3.expander('Chart'):
+        with cont_4.expander('Chart'):
             st.image('./data/images/vgg19/vgg19_confuse.png')
 
     # ViT-b16
