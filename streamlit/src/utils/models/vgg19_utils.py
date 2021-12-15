@@ -26,7 +26,7 @@ img_width  = 360
 classes = ["BA","BNE","EO","ERB","LY","MMY","MO","MY","PLT","PMY","SNE"]
 label_map = {'BA': 0, 'BNE': 1, 'EO': 2, 'ERB': 3, 'LY': 4, 'MMY': 5, 'MO': 6, 'MY': 7, 'PLT': 8, 'PMY': 9, 'SNE': 10}
 
-vgg19_path = Path("./data/model/vgg19/weights")
+vgg19_path = Path("./data/model/vgg19")
 
 
 
