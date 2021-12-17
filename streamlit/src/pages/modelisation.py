@@ -34,12 +34,12 @@ def write():
         cont_2 = st.container()
         cont_2.image('./data/images/vgg16svm/modeles.png')
 
-        cont_3 = st.container()
-        cont_3.image('./data/images/vgg16svm/filtre.png')
-
         cont_4 = st.container()
         cont_4.image('./data/images/vgg16svm/algorithmes.png')
 
+        cont_3 = st.container()
+        cont_3.image('./data/images/vgg16svm/filtre.png')
+        
     # VGG19
     if model_choice == "VGG19":
 
