@@ -51,47 +51,49 @@ def write():
     cont_1.markdown('''These two reasons could explain why the model performs 
                     so bad **only** on neutrophilic granulocytes (especially MMY and MY).''')
 
+
+
     # Généralisation
     cont_2 = st.container()
     cont_2.subheader("About the ability to generalise")
 
-    cont_2.markdown("""The table below contains percentage of correctly classified pictures for each class and for each dataset 
+    with cont_2.expander('Click to unwrap :'):
+        st.markdown("""The table below contains percentage of correctly classified pictures for each class and for each dataset 
                     (Barcelona, Munich, Raabin). We highlight in yellow classes for which we have Raabin data.""")
 
-    # Accuracy per class and dataset
-    cont_2.image('./data/images/vgg19/well_classified_stats.png')
+        # Accuracy per class and dataset
+        st.image('./data/images/vgg19/well_classified_stats.png')
 
-    # Populations
-    df = pd.read_csv('./data/df/PBC_dataset_normal_df_merged.csv')
+        # Populations
+        #df = pd.read_csv('./data/df/PBC_dataset_normal_df_merged.csv')
 
-    cont_2.markdown('''
-    The following plot shows the count of cells per classes.
-    ''')
-    fig_distrib = px.histogram(df, x='label',
-                               template='none',
-                               color='origin',
-                               color_discrete_sequence=[
-                                   '#4C78A8',  '#E45756', '#72B7B2'])
-    cont_2.plotly_chart(fig_distrib)
+        st.markdown('''
+        The following plot shows the count of cells per classes.
+        ''')
+        #fig_distrib = px.histogram(df, x='label',
+        #                           template='none',
+        #                           color='origin',
+        #                           color_discrete_sequence=['#4C78A8',  '#E45756', '#72B7B2'])
+        #cont_2.plotly_chart(fig_distrib)
 
-    cont_2.markdown('''Data from Munich and Barcelona look good : bright and clear pictures, 
-                    but lack of variety. **Raabin data are more diverse, 
-                    which is good for our model ability to generalise** : we obtain good metrics when we 
-                    have Raabin data, even for BA (a minority class).''')
+        st.markdown('''Data from Munich and Barcelona look good : bright and clear pictures, 
+        but lack of variety. **Raabin data are more diverse, 
+        which is good for our model ability to generalise** : we obtain good metrics when we 
+        have Raabin data, even for BA (a minority class).''')
 
-    cont_2.markdown('''We **reveal a bias** when considering BNE (Barcelona dominant) and SNE (Munich dominant) : BNE from Munich and
-    SNE from Barcelona obtain **a meager 60%**. The **source imbalance has a visible effect**, and **the lack of 
-    Raabin data to enrich the model implies it may not be able to generalise well on these classes** despite global 
-    **SNE F1-Score greater than 95%** and despite **SNE are the dominant class in most of the available datasets and in circulating blood**.
-    ''')
+        st.markdown('''We **reveal a bias** when considering BNE (Barcelona dominant) and SNE (Munich dominant) : BNE from Munich and
+        SNE from Barcelona obtain **a meager 60%**. The **source imbalance has a visible effect**, and **the lack of 
+        Raabin data to enrich the model implies it may not be able to generalise well on these classes** despite global 
+        **SNE F1-Score greater than 95%** and despite **SNE are the dominant class in most of the available datasets and in circulating blood**.
+        ''')
 
-    cont_2.markdown(
+        st.markdown(
         '''This emphasizes the **necessity to collect data from different institutions** in order to make diverse datasets.''')
 
-    cont_2.markdown('''Good performances obtained on BA, or ERB or MO implies 
-                    the required global amount of data for each class is not too high.
-                    **We need diversity, probably not high numbers**.
-                    ''')
+        st.markdown('''Good performances obtained on BA, or ERB or MO implies 
+        the required global amount of data for each class is not too high.
+        **We need diversity, probably not high numbers**.
+        ''')
 
     # Grad-CAM
     cont_3 = st.container()
