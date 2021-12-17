@@ -21,7 +21,7 @@ PAGES = {
     "Home": pages.home,
     "EDA": pages.EDA,
     "Modelisation": pages.modelisation,
-    "Analyse": pages.analysis,
+    "Analysis": pages.analysis,
     "Prediction": pages.model,
     "Perspectives": pages.perspective,
     "About": pages.about,

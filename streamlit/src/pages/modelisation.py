@@ -30,13 +30,13 @@ def write():
 
     # VGG16 + SVM
     if model_choice == "VGG16+SVM":
-        
+
         cont_2 = st.container()
         cont_2.image('./data/images/vgg16svm/modeles.png')
-        
+
         cont_3 = st.container()
         cont_3.image('./data/images/vgg16svm/filtre.png')
-        
+
         cont_4 = st.container()
         cont_4.image('./data/images/vgg16svm/algorithmes.png')
 
@@ -51,7 +51,7 @@ def write():
         cont_2.markdown(
             """We replace the original VGG19 top layers with our own custom classification block:""")
         cont_2.image('./data/images/vgg19/vgg19_structure.png')
-        
+
         cont_2.markdown("""
         To train this model, we adopt a **two-stage approach**:
         - **transfer learning from ImageNet** for VGG19: we only train the classification block layers,
@@ -116,11 +116,7 @@ def write():
         cont_vit.markdown("""The data flow through this pipeline during training.
                         The same steps (except data augmentation) are applied to the test data.""")
 
-        """### display gif from local file in markdown"""
-        common.display_md_gif(path="./data/images/vgg19/preprocessing_1750_50.gif",
-                              container=cont_vit,
-                              alt_text='vgg19 preprocessing gif')
-        cont_vit.markdown('''''')
+        cont_vit.image('./data/images/vitb16/ViT_preprocessing.png')
 
         # Results
         cont_vit.subheader("""Model architecture""")

@@ -1,11 +1,17 @@
 import streamlit as st
 
 from importlib import reload
+from pathlib import Path
 
 import utils.models.vgg19_utils as vgg19_utils
 import utils.models.vgg16_utils as vgg16_utils
-reload(vgg19_utils)
+import utils.models.vit_b16_utils as vit_utils
+from utils import common
 
+reload(vgg19_utils)
+reload(vgg16_utils)
+reload(vit_utils)
+reload(common)
 
 model_list = ["VGG16+SVM", "VGG19", "ViT-b16"]
 
@@ -61,30 +67,40 @@ def write():
                 if model_choice == "VGG16+SVM":
                     # Choix du modèle
                     model_flag = vgg16_utils.choose_model(img_file)
-                    
-                    if model_flag == "VGG16_SVM_6_C_SF_flag":
-                        base_model, str_result, img = vgg16_utils.VGG16_SVM_6_C_SF(img_file)
-                        st.write(str_result)
-                                     
-                    if model_flag == "VGG16_SVM_6_C_AF_flag":
-                        base_model, str_result,img = vgg16_utils.VGG16_SVM_6_C_AF(img_file)
-                        st.write(str_result) 
-                        
-                    if model_flag == "VGG16_SVM_8_C_AF_flag":
-                        base_model, str_result,img = vgg16_utils.VGG16_SVM_8_C_AF(img_file)
-                        st.write(str_result)
-                        
-                    if model_flag == "VGG16_SVM_8_C_SF_flag":
-                        base_model, str_result,img = vgg16_utils.VGG16_SVM_8_C_SF(img_file)
-                        st.write(str_result)   
 
-                    big_heatmap, superimposed_img = vgg16_utils.gradcam(base_model, img, img_file, alpha = 0.8, plot = False)  
-                    st.image(superimposed_img,width=150)
-                
-                # if model_choice == "ViT-b16":
-                #     pass
-                # if normalize_case3:
-                #     pass
-                #     pass
-                # if normalize_case3:
-                #     pass
+                    if model_flag == "VGG16_SVM_6_C_SF_flag":
+                        base_model, str_result, img = vgg16_utils.VGG16_SVM_6_C_SF(
+                            img_file)
+                        st.write(str_result)
+
+                    if model_flag == "VGG16_SVM_6_C_AF_flag":
+                        base_model, str_result, img = vgg16_utils.VGG16_SVM_6_C_AF(
+                            img_file)
+                        st.write(str_result)
+
+                    if model_flag == "VGG16_SVM_8_C_AF_flag":
+                        base_model, str_result, img = vgg16_utils.VGG16_SVM_8_C_AF(
+                            img_file)
+                        st.write(str_result)
+
+                    if model_flag == "VGG16_SVM_8_C_SF_flag":
+                        base_model, str_result, img = vgg16_utils.VGG16_SVM_8_C_SF(
+                            img_file)
+                        st.write(str_result)
+
+                        big_heatmap, superimposed_img = vgg16_utils.gradcam(
+                            base_model, img, img_file, alpha=0.8, plot=False)
+                    st.image(superimposed_img, width=150)
+
+                if model_choice == "ViT-b16":
+
+                    VIT_PATH = Path('./data/model/vitb16')
+                    model = common.load_model(model_path=VIT_PATH)
+
+                    fig, df_pred = vit_utils.ViT_prediction(model, img_file)
+
+                    vit_utils.print_proba(df_pred)
+
+                    st.subheader(
+                        f'Attention map for {df_pred.label[0]}:')
+                    st.pyplot(fig)
