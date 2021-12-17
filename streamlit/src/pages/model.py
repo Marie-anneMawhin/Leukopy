@@ -88,8 +88,8 @@ def write():
                             img_file)
                         st.write(str_result)
 
-                        big_heatmap, superimposed_img = vgg16_utils.gradcam(
-                            base_model, img, img_file, alpha=0.8, plot=False)
+                    big_heatmap, superimposed_img = vgg16_utils.gradcam(
+                        base_model, img, img_file, alpha=0.8, plot=False)
                     st.image(superimposed_img, width=150)
 
                 if model_choice == "ViT-b16":
