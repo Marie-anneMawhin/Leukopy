@@ -86,7 +86,8 @@ def write():
         """)
 
     with col2:
-        st.image('./data/images/blood_cells.png')
+        st.write('')
+        st.image('./data/images/blood_cells.png', width=250)
 
     st.markdown("""
     ## Data
