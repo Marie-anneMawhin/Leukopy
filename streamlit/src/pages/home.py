@@ -74,15 +74,21 @@ def write():
                           container=hemato,
                           alt_text='hemato gif')
 
-    st.markdown(""" 
-    ##
-    Each cells shows different characteristics such as:
-    - the colour of their granules (pink/orange, purple, lilac)
-    - the number of nuclear lobes
-    - the shape of the nucleus
-    - the colour of cytoplasm ...
+    col1, col2 = st.columns(2)
+    with col1:
+        st.markdown(""" 
+        ##
+        Each cells shows different characteristics such as:
+        - the colour of their granules (pink/orange, purple, lilac)
+        - the number of nuclear lobes
+        - the shape of the nucleus
+        - the colour of cytoplasm ...
+        """)
 
+    with col2:
+        st.image('./data/images/blood_cells.png')
 
+    st.markdown("""
     ## Data
 
     #### 1.PBC_dataset_normal_Barcelona
