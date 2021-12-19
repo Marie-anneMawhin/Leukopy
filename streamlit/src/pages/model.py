@@ -24,10 +24,12 @@ def write():
     st.write('')
     st.subheader('1. Choose which model you want to use for prediction')
 
-    model_choice = st.selectbox("Select model", options=model_list)
+    model_choice = st.selectbox("Select a model", options=model_list)
 
     st.write('')
     st.subheader('2. Upload an image or select a preloaded example')
+    st.markdown(
+        '*Note: please remove any uploaded image to choose an example image from the list.*')
     cola, colb, colc = st.columns([4, 1, 4])
 
     with cola:
@@ -51,7 +53,12 @@ def write():
     elif example_path:
         selected_img = dict_img[example_path]
         img_file = open(selected_img, 'rb')
-        img_name = img_file.name.split('/')[-2]
+
+        try:
+            img_name = img_file.name.split('/')[-2]
+
+        except IndexError:
+            st.write('please load an image.')
 
     img = img_file.read()
 
@@ -91,8 +98,6 @@ def write():
                 st.text('P(%s) = %s' % (
                     sorted_classes[2], vgg19_utils.print_proba(sorted_preds[2])))
 
-                # st.table({sorted_classes[i]:vgg19_utils.print_proba(sorted_preds[i]) for i in sorted_preds[:3]})
-
                 st.subheader('Grad-CAM for %s:' % (sorted_classes[0]))
                 st.pyplot(fig)
 
@@ -120,7 +125,7 @@ def write():
                         img_file)
                     st.write(str_result)
 
-                big_heatmap, superimposed_img = vgg16_utils.gradcam(
+                _, superimposed_img = vgg16_utils.gradcam(
                     base_model, img, img_file, alpha=0.8, plot=False)
                 st.image(superimposed_img, width=150)
 
