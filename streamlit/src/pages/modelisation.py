@@ -40,6 +40,9 @@ def write():
         cont_3 = st.container()
         cont_3.image('./data/images/vgg16svm/filtre.png')
         
+        cont_5 = st.container()
+        cont_5.image('./data/images/vgg16svm/resultats.png')
+        
     # VGG19
     if model_choice == "VGG19":
 
@@ -62,13 +65,17 @@ def write():
         cont_3 = st.container()
         cont_3.subheader("""Preprocessing""")
 
+        #cont_3.markdown("""The data flow through this pipeline during training.
+        #                The same steps (except data augmentation) are applied to the test data.""")
+        #
+        #"""### display gif from local file in markdown"""
+        #common.display_md_gif(path="./data/images/vgg19/preprocessing_1750_50.gif",
+        #                      container=cont_2,
+        #                      alt_text='vgg19 preprocessing gif')
         cont_3.markdown("""The data flow through this pipeline during training.
-                        The same steps (except data augmentation) are applied to the test data.""")
-
-        """### display gif from local file in markdown"""
-        common.display_md_gif(path="./data/images/vgg19/preprocessing_1750_50.gif",
-                              container=cont_2,
-                              alt_text='vgg19 preprocessing gif')
+        The same steps (except data augmentation) are applied to the test data."""
+        )
+        cont_3.image("./data/images/vgg19/preprocessing_1750_50.gif")
         cont_3.markdown('''''')
 
         # Results
