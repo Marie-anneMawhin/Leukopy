@@ -10,7 +10,7 @@ def write():
                 we have seen that **good global metrics can hide important problems**, e.g. with 
                 the model ability to **generalise** and correctly predict the nature of a previously unseen cell.""")
 
-    cola, colb = st.columns([1, 15])
+    cola, colb = st.columns([1, 12])
     with cola:
         st.image('./data/images/diversity.png', width=40)
     with colb:
@@ -44,7 +44,7 @@ def write():
         st.image('./data/images/augmentation.png')
 
     # Data labelling cross-validation
-    colc, cold = st.columns([1, 15])
+    colc, cold = st.columns([1, 12])
     with colc:
         st.image('./data/images/label.png', width=40)
     with cold:
@@ -74,7 +74,7 @@ def write():
 
     # Object detection
 
-    cole, colf = st.columns([1, 15])
+    cole, colf = st.columns([1, 12])
     with cole:
         st.image('./data/images/detection.png', width=40)
     with colf:
